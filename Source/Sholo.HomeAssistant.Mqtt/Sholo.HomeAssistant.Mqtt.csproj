@@ -1,8 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+  <PropertyGroup Label="Build">
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Product>Sholo.HomeAssistant.Mqtt</Product>
+    <Description>Tools for exposing .NET code as Home Assistant devices using MQTT for discovery, state, and commands</Description>
+    <PackageTags>HomeAssistant;Automation;Reactive;Rx;Mqtt</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

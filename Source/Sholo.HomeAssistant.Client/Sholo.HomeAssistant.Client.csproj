@@ -1,8 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+  <PropertyGroup Label="Build">
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Product>Sholo.HomeAssistant.Client.Domains</Product>
+    <Description>WebSocket and REST clients for Home Assistant</Description>
+    <PackageTags>HomeAssistant;Automation;Reactive;Rx</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

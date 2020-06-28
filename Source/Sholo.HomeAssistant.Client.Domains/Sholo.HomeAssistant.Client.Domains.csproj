@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+  <PropertyGroup Label="Build">
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Product>Sholo.HomeAssistant.Client.Domains</Product>
+    <Description>Sholo.HomeAssistant.Client extensions for built-in Home Assistant entity domains</Description>
+    <PackageTags>HomeAssistant;Automation;Reactive;Rx</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

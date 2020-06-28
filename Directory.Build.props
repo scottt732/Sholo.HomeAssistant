@@ -1,0 +1,31 @@
+<Project>
+
+  <PropertyGroup Label="Build">
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)Sholo.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Authors>Scott Holodak</Authors>
+    <Company>Scott Holodak</Company>
+    <Copyright>Copyright © Scott Holodak. All rights Reserved</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/scottt732/Sholo.HomeAssistant</PackageProjectUrl>
+    <PackageIcon>Icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/scottt732/Sholo.HomeAssistant.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>https://github.com/scottt732/Sholo.HomeAssistant/releases</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup Label="Package References">
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" Version="2020.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" PrivateAssets="All" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" PrivateAssets="All" Version="16.6.13" />
+    <PackageReference Include="MinVer" PrivateAssets="All" Version="2.3.0" />
+    <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.1.118" />
+  </ItemGroup>
+
+</Project>

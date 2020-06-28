@@ -1,0 +1,89 @@
+trigger:
+  branches:
+    include:
+    - '*'
+  tags:
+    include:
+    - '*'
+
+variables:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  MINVERBUILDMETADATA: build.$(Build.BuildId)
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool: $(BuildPool)
+    timeoutInMinutes: 10
+    steps:
+    - checkout: self
+      lfs: true
+    - task: UseDotNet@2
+      displayName: 'Install .NET Core SDK'
+      inputs:
+        packageType: 'sdk'
+        useGlobalJson: true
+    - pwsh: 'dotnet tool restore'
+      displayName: 'Dotnet Tool Restore'
+      failOnStderr: true
+    - pwsh: 'dotnet cake --target=Build'
+      displayName: 'Dotnet Cake Build'
+      failOnStderr: true
+    - pwsh: 'dotnet cake --target=Test'
+      displayName: 'Dotnet Cake Test'
+      failOnStderr: true
+    - pwsh: 'dotnet cake --target=Pack'
+      displayName: 'Dotnet Cake Pack'
+      failOnStderr: true
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results'
+      inputs:
+        testResultsFormat: 'VSTest'
+        testResultsFiles: '**/*.trx'
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: cobertura
+        summaryFileLocation: '**/*.cobertura.xml'
+    - publish: './Artifacts'
+      artifact: 'publish'
+      displayName: 'Publish Artifacts'
+- stage: Deploy
+  jobs:
+  - deployment: AzureArtifacts
+    displayName: 'Azure Artifacts'
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    pool: $(BuildPool)
+    environment: 'Build'
+    variables:
+      - group: Sholo Azure Artifacts
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: NuGetToolInstaller@1
+            displayName: 'NuGet Install'
+          - task: NuGetAuthenticate@0
+            displayName: 'NuGet Authenticate'
+          - pwsh: dotnet nuget push $(Agent.BuildDirectory)/publish/*.nupkg --source $(AzureArtifactsSource) --api-key AzureArtifacts --skip-duplicate
+            displayName: 'NuGet Push'
+            failOnStderr: true
+  - deployment: NuGet
+    condition: and(ne(variables['Build.Reason'], 'PullRequest'), startsWith(variables['Build.sourceBranch'], 'refs/tags/'))
+    pool: $(BuildPool)
+    environment: 'Build'
+    variables:
+      - group: Sholo NuGet
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: NuGetToolInstaller@1
+            displayName: 'Install NuGet'
+          - pwsh: |
+              Get-ChildItem $(Agent.BuildDirectory)\publish -Filter *.nupkg |
+              Where-Object { !$_.Name.Contains('preview') } |
+              ForEach-Object { dotnet nuget push $_ --source https://api.nuget.org/v3/index.json --api-key $(NuGetApiKey) --skip-duplicate }
+            displayName: 'NuGet Push'
+            failOnStderr: true

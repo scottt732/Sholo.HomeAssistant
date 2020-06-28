@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.IEntityDefinition">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAQAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>EntityDefinitions\IEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.IStatefulEntityDefinition">
+    <Position X="3.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAgAAAAAAAAAAACBAAIAgAAAAIAAIAIA=</HashCode>
+      <FileName>EntityDefinitions\IStatefulEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.ICoreSwitchEntityDefinition">
+    <Position X="16" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>EntityDefinitions\ICoreSwitchEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Vacuum.IVacuumEntityDefinition">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAYAAQAIAAAAAAAEAgAEAAAIAAAEAAgAAAAACAA=</HashCode>
+      <FileName>EntityDefinitions\Vacuum\IVacuumEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Switch.ISwitchEntityDefinition">
+    <Position X="19.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAABAAAAAAAAAAAAAAAAAAIACAAEAAAA=</HashCode>
+      <FileName>EntityDefinitions\Switch\ISwitchEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Sensor.ISensorEntityDefinition">
+    <Position X="10.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAQAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>EntityDefinitions\Sensor\ISensorEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Light.ILightEntityDefinition">
+    <Position X="16" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAgAAAkEAAIAEAQBAAgAAACJAAIEAQAAMDCgCQEYAA=</HashCode>
+      <FileName>EntityDefinitions\Light\ILightEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Lock.ILockEntityDefinition">
+    <Position X="17.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAABAAgAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>EntityDefinitions\Lock\ILockEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.BinarySensor.IBinarySensorEntityDefinition">
+    <Position X="8.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAQAAAAAIACAAAAAAA=</HashCode>
+      <FileName>EntityDefinitions\BinarySensor\IBinarySensorEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Fan.IFanEntityDefinition">
+    <Position X="14.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAABAABAAAAEAAAAAIABABAAAAAJAAAKACAAAAIAE=</HashCode>
+      <FileName>EntityDefinitions\Fan\IFanEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Cover.ICoverEntityDefinition">
+    <Position X="12.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAwAAAAgAIAAAAEAgAIIAAEAAAQAQEEAACBgAQAREo=</HashCode>
+      <FileName>EntityDefinitions\Cover\ICoverEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.AlarmControlPanel.IAlarmControlPanelEntityDefinition">
+    <Position X="4.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAQAAAAAAAAgAAACAIAAAAAAAQAAAAAICAA=</HashCode>
+      <FileName>EntityDefinitions\AlarmControlPanel\IAlarmControlPanelEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Camera.ICameraEntityDefinition">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>EntityDefinitions\Camera\ICameraEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.ICoreSensorEntityDefinition">
+    <Position X="9.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>EntityDefinitions\ICoreSensorEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Sholo.HomeAssistant.Mqtt.EntityDefinitions.Climate.IClimateEntityDefinition">
+    <Position X="6.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MABABCgRQCAAAcEAACCAIoQAjABAhECGAIRCAAMiUAE=</HashCode>
+      <FileName>EntityDefinitions\Climate\IClimateEntityDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

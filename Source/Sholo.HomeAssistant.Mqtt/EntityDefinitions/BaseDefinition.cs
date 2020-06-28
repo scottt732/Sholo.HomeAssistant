@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -30,7 +29,7 @@ namespace Sholo.HomeAssistant.Mqtt.EntityDefinitions
 
         protected BaseDefinition()
         {
-            var typeName = GetType().Name.Replace("EntityDefinition", string.Empty, StringComparison.Ordinal);
+            var typeName = GetType().Name.Replace("EntityDefinition", string.Empty);
             var underscoreTypeName = UnderscoredNamingConvention.Instance.Apply(typeName);
 
             _serializationObject = new Dictionary<string, object>

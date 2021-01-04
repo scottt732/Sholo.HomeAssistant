@@ -7,13 +7,13 @@ using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Extensions.ManagedClient;
 
-namespace Sholo.HomeAssistant.Mqtt.Dispatchers
+namespace Sholo.HomeAssistant.Mqtt.MessageBus
 {
-    public class OutboundMqttMessageBus : IOutboundMqttMessageBus
+    public class MqttMessageBus : IMqttMessageBus
     {
-        private ILogger<OutboundMqttMessageBus> Logger { get; }
+        private ILogger<MqttMessageBus> Logger { get; }
 
-        public OutboundMqttMessageBus(ILogger<OutboundMqttMessageBus> logger)
+        public MqttMessageBus(ILogger<MqttMessageBus> logger)
         {
             Logger = logger;
         }

@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Sholo.HomeAssistant.Mqtt.Dispatchers;
 using Sholo.HomeAssistant.Mqtt.Entities;
 using Sholo.HomeAssistant.Mqtt.EntityDefinitions;
+using Sholo.HomeAssistant.Mqtt.MessageBus;
 using Sholo.HomeAssistant.Serialization;
 
 namespace Sholo.HomeAssistant.Mqtt.StateChangeHandlers
@@ -19,7 +20,7 @@ namespace Sholo.HomeAssistant.Mqtt.StateChangeHandlers
         private JsonSerializer JsonSerializer { get; } = JsonSerializer.Create(HomeAssistantSerializerSettings.JsonSerializerSettings);
 
         public IDisposable Bind(
-            IOutboundMqttMessageBusPublisher target,
+            IMqttMessageBus target,
             TEntity entity,
             TEntityDefinition entityDefinition,
             MqttQualityOfServiceLevel? qualityOfServiceLevel,
@@ -47,7 +48,7 @@ namespace Sholo.HomeAssistant.Mqtt.StateChangeHandlers
         }
 
         private IDisposable BindObserver(
-            IOutboundMqttMessageBusPublisher target,
+            IMqttMessageBus target,
             TEntity entity,
             TEntityDefinition entityDefinition,
             MqttQualityOfServiceLevel? qualityOfServiceLevel,
@@ -70,7 +71,10 @@ namespace Sholo.HomeAssistant.Mqtt.StateChangeHandlers
 
                         var message = messageBuilder.Build();
 
-                        target.PublishMessage(message);
+                        if (message.Payload != null)
+                        {
+                            target.PublishMessage(message);
+                        }
                     }
                 );
 

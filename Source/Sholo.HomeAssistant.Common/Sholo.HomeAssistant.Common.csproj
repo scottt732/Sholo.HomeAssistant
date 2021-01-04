@@ -17,9 +17,16 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[3.0.0,6.0.0)" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="[3.0.0,6.0.0)" />
     <PackageReference Include="Newtonsoft.Json" Version="[12.0.1,13.0.0)" />
+    <PackageReference Include="System.Linq.Async" Version="[4.0.0,6.0.0)" />
+    <PackageReference Include="System.Reactive" Version="[4.0.0,6.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SolutionName)' != 'HomeAutomation'">
     <PackageReference Include="Sholo.Utils" Version="*-*" />
-    <PackageReference Include="System.Linq.Async" Version="[4.0.0,5.0.0)" />
-    <PackageReference Include="System.Reactive" Version="[4.0.0,5.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SolutionName)' == 'HomeAutomation'">
+    <ProjectReference Include="$(SmartSolutionDir)\Sholo\Libraries\Sholo.Utils\Source\Sholo.Utils\Sholo.Utils.csproj" />
   </ItemGroup>
 
 </Project>

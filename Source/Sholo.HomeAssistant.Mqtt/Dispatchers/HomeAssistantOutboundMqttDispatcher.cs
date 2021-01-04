@@ -3,31 +3,37 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using MQTTnet.Extensions.ManagedClient;
+using Sholo.HomeAssistant.Mqtt.ControlPanel;
+using Sholo.HomeAssistant.Mqtt.MessageBus;
+using Sholo.Mqtt.ApplicationProvider;
 
 namespace Sholo.HomeAssistant.Mqtt.Dispatchers
 {
     public class HomeAssistantOutboundMqttDispatcher : IHostedService
     {
         private IManagedMqttClient ManagedMqttClient { get; }
+        private IMqttApplicationProvider MqttApplicationProvider { get; }
         private IMqttEntityControlPanel MqttEntityControlPanel { get; }
-        private IOutboundMqttMessageBusConsumer MessageBusConsumer { get; }
+        private IMqttMessageBus MessageBus { get; }
         private IDisposable MessageBusSubscription { get; set; }
 
         public HomeAssistantOutboundMqttDispatcher(
             IManagedMqttClient managedMqttClient,
+            IMqttApplicationProvider mqttApplicationProvider,
             IMqttEntityControlPanel mqttEntityControlPanel,
-            IOutboundMqttMessageBusConsumer messageBusConsumer
+            IMqttMessageBus messageBus
         )
         {
             ManagedMqttClient = managedMqttClient;
+            MqttApplicationProvider = mqttApplicationProvider;
             MqttEntityControlPanel = mqttEntityControlPanel;
-            MessageBusConsumer = messageBusConsumer;
+            MessageBus = messageBus;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            MessageBusSubscription = MessageBusConsumer.Bind(ManagedMqttClient);
-            MqttEntityControlPanel.ResendDiscovery();
+            MessageBusSubscription = MessageBus.Bind(ManagedMqttClient);
+            MqttEntityControlPanel.BindAll(MqttApplicationProvider, MessageBus, true);
             return Task.CompletedTask;
         }
 

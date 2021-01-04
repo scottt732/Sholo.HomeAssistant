@@ -3,6 +3,7 @@ using MQTTnet.Protocol;
 using Sholo.HomeAssistant.Mqtt.Dispatchers;
 using Sholo.HomeAssistant.Mqtt.Entities;
 using Sholo.HomeAssistant.Mqtt.EntityDefinitions;
+using Sholo.HomeAssistant.Mqtt.MessageBus;
 
 namespace Sholo.HomeAssistant.Mqtt.StateChangeHandlers
 {
@@ -11,7 +12,7 @@ namespace Sholo.HomeAssistant.Mqtt.StateChangeHandlers
         where TEntityDefinition : IEntityDefinition
     {
         IDisposable Bind(
-            IOutboundMqttMessageBusPublisher target,
+            IMqttMessageBus target,
             TEntity entity,
             TEntityDefinition entityDefinition,
             MqttQualityOfServiceLevel? qualityOfServiceLevel,

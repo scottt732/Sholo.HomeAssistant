@@ -1,7 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Validation\" />
+    <Folder Include="Common\Utilities\" />
+    <Folder Include="Common\Serialization\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.Domains\Sholo.HomeAssistant.Client.Domains.csproj" />
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client\Sholo.HomeAssistant.Client.csproj" />
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Common\Sholo.HomeAssistant.Common.csproj" />
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Mqtt\Sholo.HomeAssistant.Mqtt.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Moq" Version="4.15.2" />
+  </ItemGroup>
 
 </Project>

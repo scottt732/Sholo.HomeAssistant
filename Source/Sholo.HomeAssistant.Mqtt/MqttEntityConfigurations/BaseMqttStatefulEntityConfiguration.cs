@@ -10,7 +10,7 @@ namespace Sholo.HomeAssistant.Mqtt.MqttEntityConfigurations
 {
     public abstract class BaseMqttStatefulEntityConfiguration<TEntity, TEntityDefinition>
         : BaseMqttEntityConfiguration<TEntity, TEntityDefinition>, IMqttStatefulEntityConfiguration<TEntity, TEntityDefinition>
-            where TEntity : IEntity
+            where TEntity : IStatefulEntity
             where TEntityDefinition : IStatefulEntityDefinition
     {
         public MqttQualityOfServiceLevel? StateMessageQualityOfServiceLevel { get; }

@@ -13,7 +13,7 @@ namespace Sholo.HomeAssistant.Mqtt.StateChangeHandlers.Switch
             {
                 SwitchState.On => entityDefinition.StateOn,
                 SwitchState.Off => entityDefinition.StateOff,
-                SwitchState.Unknown => throw new NotImplementedException(), // TODO
+                SwitchState.Unknown => null, // TODO
                 _ => throw new ArgumentOutOfRangeException(nameof(entity))
             };
 

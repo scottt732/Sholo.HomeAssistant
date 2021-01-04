@@ -6,8 +6,8 @@ using Sholo.HomeAssistant.Mqtt.StateChangeHandlers;
 namespace Sholo.HomeAssistant.Mqtt.MqttEntityConfigurations
 {
     public interface IMqttStatefulEntityConfiguration<TEntity, TEntityDefinition> : IMqttEntityConfiguration<TEntity, TEntityDefinition>
-        where TEntity : IEntity
-        where TEntityDefinition : IEntityDefinition
+        where TEntity : IStatefulEntity
+        where TEntityDefinition : IStatefulEntityDefinition
     {
         MqttQualityOfServiceLevel? StateMessageQualityOfServiceLevel { get; }
         bool RetainStateMessages { get; }

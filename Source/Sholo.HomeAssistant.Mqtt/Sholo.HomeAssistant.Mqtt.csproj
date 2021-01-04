@@ -34,6 +34,7 @@
     <Folder Include="Entities\MediaPlayer\" />
     <Folder Include="EntityDefinitionBuilders\MediaPlayer\" />
     <Folder Include="EntityDefinitions\MediaPlayer\" />
+    <Folder Include="BindingManager\" />
     <Folder Include="StateChangeHandlers\AlarmControlPanel\" />
     <Folder Include="StateChangeHandlers\Camera\" />
     <Folder Include="StateChangeHandlers\Climate\" />
@@ -48,9 +49,17 @@
 
   <ItemGroup>
     <PackageReference Include="MQTTnet" Version="[3.0.11,4.0.0)" />
+    <PackageReference Include="YamlDotNet" Version="[8.0.0,11.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SolutionName)' != 'HomeAutomation'">
     <PackageReference Include="Sholo.Mqtt" Version="*-*" />
     <PackageReference Include="Sholo.Utils" Version="*-*" />
-    <PackageReference Include="YamlDotNet" Version="[8.0.0,9.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SolutionName)' == 'HomeAutomation'">
+    <ProjectReference Include="$(SmartSolutionDir)\Sholo\Libraries\Sholo.Mqtt\Source\Sholo.Mqtt\Sholo.Mqtt.csproj" />
+    <ProjectReference Include="$(SmartSolutionDir)\Sholo\Libraries\Sholo.Utils\Source\Sholo.Utils\Sholo.Utils.csproj" />
   </ItemGroup>
 
 </Project>

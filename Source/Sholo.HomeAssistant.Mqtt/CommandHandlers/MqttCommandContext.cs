@@ -1,4 +1,4 @@
-using Sholo.Mqtt.Consumer;
+using Sholo.Mqtt;
 
 namespace Sholo.HomeAssistant.Mqtt.CommandHandlers
 {
@@ -7,23 +7,11 @@ namespace Sholo.HomeAssistant.Mqtt.CommandHandlers
         public TEntity Entity { get; set; }
         public TEntityDefinition EntityDefinition { get; set; }
 
-        public MqttCommandContext(MqttRequestContext context, TEntity entity, TEntityDefinition entityDefinition)
+        public MqttCommandContext(IMqttRequestContext context, TEntity entity, TEntityDefinition entityDefinition)
+            : base(context)
         {
             Entity = entity;
             EntityDefinition = entityDefinition;
-            ContentType = context.ContentType;
-            CorrelationData = context.CorrelationData;
-            MessageExpiryInterval = context.MessageExpiryInterval;
-            Payload = context.Payload;
-            PayloadFormatIndicator = context.PayloadFormatIndicator;
-            QualityOfServiceLevel = context.QualityOfServiceLevel;
-            ResponseTopic = context.ResponseTopic;
-            Retain = context.Retain;
-            SubscriptionIdentifiers = context.SubscriptionIdentifiers;
-            Topic = context.Topic;
-            TopicAlias = context.TopicAlias;
-            UserProperties = context.UserProperties;
-            ClientId = context.ClientId;
         }
     }
 }

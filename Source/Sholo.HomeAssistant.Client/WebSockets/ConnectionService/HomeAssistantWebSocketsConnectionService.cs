@@ -350,7 +350,12 @@ namespace Sholo.HomeAssistant.Client.WebSockets.ConnectionService
                         throw new InvalidOperationException();
                     }
 
+#if NETSTANDARD2_1
+                    var memory = new ReadOnlyMemory<byte>(buffer.Array, buffer.Offset, result.Count);
+                    await ms.WriteAsync(memory, cancellationToken);
+#else
                     await ms.WriteAsync(buffer.Array, buffer.Offset, result.Count, cancellationToken);
+#endif
                 }
                 while (!result.EndOfMessage);
 

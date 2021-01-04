@@ -2,8 +2,10 @@ using System;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Sholo.HomeAssistant.DependencyInjection;
+using Sholo.HomeAssistant.Mqtt.ControlPanel;
 using Sholo.HomeAssistant.Mqtt.Dispatchers;
-using Sholo.Mqtt.Consumer;
+using Sholo.HomeAssistant.Mqtt.MessageBus;
+using Sholo.Mqtt.ApplicationBuilderConfiguration;
 
 namespace Sholo.HomeAssistant.Mqtt
 {
@@ -14,14 +16,12 @@ namespace Sholo.HomeAssistant.Mqtt
             this IHomeAssistantServiceCollection services,
             Action<IHomeAssistantMqttConfigurationBuilder> builderConfigurator = null)
         {
-            services.AddSingleton<IOutboundMqttMessageBus, OutboundMqttMessageBus>();
-            services.AddSingleton<IOutboundMqttMessageBusPublisher>(sp => sp.GetRequiredService<IOutboundMqttMessageBus>());
-            services.AddSingleton<IOutboundMqttMessageBusConsumer>(sp => sp.GetRequiredService<IOutboundMqttMessageBus>());
+            services.AddSingleton<IMqttMessageBus, MqttMessageBus>();
 
             services.AddSingleton<IMqttEntityControlPanel, MqttEntityControlPanel>();
-            services.AddHostedService<HomeAssistantOutboundMqttDispatcher>();
+            services.AddSingleton<IConfigureMqttApplicationBuilder>(sp => sp.GetRequiredService<IMqttEntityControlPanel>());
 
-            services.AddTransient<IConfigureMqttApplicationBuilder, HomeAssistantIncomingMqttDispatcher>();
+            services.AddHostedService<HomeAssistantOutboundMqttDispatcher>();
 
             var configurationBuilder = new HomeAssistantMqttConfigurationBuilder(services.Configuration, services);
             builderConfigurator?.Invoke(configurationBuilder);

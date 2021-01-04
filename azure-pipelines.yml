@@ -21,7 +21,7 @@ stages:
     - checkout: self
       lfs: true
     - task: UseDotNet@2
-      displayName: 'Install .NET Core SDK'
+      displayName: 'Install .NET SDK'
       inputs:
         packageType: 'sdk'
         useGlobalJson: true

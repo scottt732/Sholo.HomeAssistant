@@ -1,5 +1,10 @@
 <Project>
 
+  <PropertyGroup>
+    <ParentDirectoryBuildTargets>$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))</ParentDirectoryBuildTargets>
+  </PropertyGroup>
+  <Import Project="$(ParentDirectoryBuildTargets)" Condition="Exists('$(ParentDirectoryBuildTargets)')"/>
+
   <Target Name="Versioning" BeforeTargets="MinVer">
     <PropertyGroup Label="Build">
       <MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>

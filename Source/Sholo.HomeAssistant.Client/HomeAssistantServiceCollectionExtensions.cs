@@ -18,13 +18,12 @@ namespace Sholo.HomeAssistant.Client
     {
         public static IHomeAssistantServiceCollection AddClient(this IHomeAssistantServiceCollection services, Action<IHomeAssistantClientConfigurationBuilder> builderConfigurator = null)
         {
-            services.AddOptions<HomeAssistantClientOptions>()
-                .Bind(services.Configuration.GetSection("client"));
+            services.AddOptions<HomeAssistantClientOptions>().Bind(services.Configuration.GetSection("client"));
 
             services.AddHttpClient<IHomeAssistantRestClient, HomeAssistantRestClient>((sp, client) =>
             {
                 var options = sp.GetRequiredService<IOptions<HomeAssistantClientOptions>>();
-                client.BaseAddress = options.Value.ApiUrlPrefix;
+                client.BaseAddress = options.Value.RestApiUrlPrefix;
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.Value.Auth.Token);
             });
@@ -37,7 +36,7 @@ namespace Sholo.HomeAssistant.Client
             services.AddSingleton<IStateProvider, StateProvider>();
             services.AddSingleton<IStateCodeGenerator, NoOpStateCodeGenerator>();
 
-            var configurationBuilder = new HomeAssistantClientConfigurationBuilder(services.Configuration, services);
+            var configurationBuilder = new HomeAssistantClientConfigurationBuilder(services);
             builderConfigurator?.Invoke(configurationBuilder);
 
             return services;

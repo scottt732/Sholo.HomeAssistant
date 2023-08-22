@@ -53,7 +53,7 @@ namespace Sholo.HomeAssistant.Mqtt.Discovery
                 messageBuilder = messageBuilder.WithQualityOfServiceLevel(Settings.Value.QualityOfService.Value);
             }
 
-            Logger.LogInformation("[{topic}] {payload}", topic, payloadString);
+            Logger.LogInformation("[{Topic}] {Payload}", topic, payloadString);
 
             var message = messageBuilder.Build();
 

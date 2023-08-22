@@ -1,3 +1,4 @@
+using System.Linq;
 using MQTTnet;
 using MQTTnet.Protocol;
 using Sholo.HomeAssistant.Mqtt.CommandHandlers;

@@ -1,3 +1,4 @@
+using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,14 +12,14 @@ namespace Sholo.HomeAssistant.DependencyInjection
     [PublicAPI]
     public static class ServiceCollectionExtensions
     {
-        public static IHomeAssistantServiceCollection AddHomeAssistant(this IServiceCollection services, IConfiguration homeAssistantConfigurationSection)
+        public static IHomeAssistantServiceCollection AddHomeAssistant(this IServiceCollection services, IConfiguration configuration)
         {
             services.TryAddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.TryAddTransient(typeof(ILogger<>), typeof(NullLogger<>));
 
             services.AddSingleton<IValidator, Validator>();
 
-            return new HomeAssistantServiceCollection(services, homeAssistantConfigurationSection);
+            return new HomeAssistantServiceCollection(services, configuration);
         }
     }
 }

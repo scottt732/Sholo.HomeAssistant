@@ -42,8 +42,8 @@ namespace Sholo.HomeAssistant.Utilities
         {
             requiresSerializationOverride = str.StartsWith("_", StringComparison.Ordinal)
                                             || str.EndsWith("_", StringComparison.Ordinal)
-                                            || str.IndexOf(" ", StringComparison.Ordinal) >= 0
-                                            || str.IndexOf("__", StringComparison.Ordinal) >= 0;
+                                            || str.Contains(' ', StringComparison.Ordinal)
+                                            || str.Contains("__", StringComparison.Ordinal);
 
             return string.Join(string.Empty, str.Split('_', '.', ' ')
                 .Select(x => x.Substring(0, Math.Min(1, x.Length)).ToUpper(CultureInfo.CurrentCulture) + (x.Length > 1 ? x.Substring(1) : string.Empty)));
@@ -55,8 +55,8 @@ namespace Sholo.HomeAssistant.Utilities
         {
             requiresSerializationOverride = str.StartsWith("_", StringComparison.Ordinal)
                                             || str.EndsWith("_", StringComparison.Ordinal)
-                                            || str.IndexOf(" ", StringComparison.Ordinal) >= 0
-                                            || str.IndexOf("__", StringComparison.Ordinal) >= 0;
+                                            || str.Contains(' ', StringComparison.Ordinal)
+                                            || str.Contains("__", StringComparison.Ordinal);
 
             return string.Join(" ", str.Split('_', '.', ' ').Select(x => x.Substring(0, Math.Min(1, x.Length)).ToUpper(CultureInfo.CurrentCulture) + (x.Length > 1 ? x.Substring(1) : string.Empty)));
         }

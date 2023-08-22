@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 using Sholo.HomeAssistant.Client.Events.StateChanged;
 using Sholo.HomeAssistant.Client.Messages.CameraThumbnails;
 using Sholo.HomeAssistant.Client.Messages.Config;
-using Sholo.HomeAssistant.Client.Messages.DiscoveryInfo;
 using Sholo.HomeAssistant.Client.Messages.Events;
 
 namespace Sholo.HomeAssistant.Client.Rest
@@ -15,8 +14,8 @@ namespace Sholo.HomeAssistant.Client.Rest
     [PublicAPI]
     public interface IHomeAssistantRestClient
     {
+        Task<bool> GetApiEnabledAsync(TimeSpan? requestTimeout = null, CancellationToken cancellationToken = default);
         Task<ConfigurationResult> GetConfigurationAsync(CancellationToken cancellationToken = default);
-        Task<DiscoveryInfoResult> GetDiscoveryInfoAsync(CancellationToken cancellationToken = default);
         Task<EventResult[]> GetEventsAsync(CancellationToken cancellationToken = default);
         Task<JToken> GetServicesAsync(CancellationToken cancellationToken = default);
         Task<EntityState[][]> GetHistoryAsync(string[] entityIds, DateTimeOffset? startTime = null, DateTimeOffset? endTime = null, CancellationToken cancellationToken = default);

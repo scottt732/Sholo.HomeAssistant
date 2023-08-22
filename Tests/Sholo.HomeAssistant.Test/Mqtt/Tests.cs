@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text;
 using Moq;
@@ -5,7 +6,6 @@ using MQTTnet;
 using MQTTnet.Protocol;
 using Sholo.HomeAssistant.Mqtt.ControlPanel;
 using Sholo.HomeAssistant.Mqtt.Discovery.Payloads;
-using Sholo.HomeAssistant.Mqtt.Dispatchers;
 using Sholo.HomeAssistant.Mqtt.Entities.Switch;
 using Sholo.HomeAssistant.Mqtt.EntityDefinitionBuilders.Switch;
 using Sholo.HomeAssistant.Mqtt.EntityDefinitions.Switch;
@@ -13,8 +13,7 @@ using Sholo.HomeAssistant.Mqtt.MessageBus;
 using Sholo.HomeAssistant.Mqtt.MqttEntityBindingManagers;
 using Sholo.HomeAssistant.Mqtt.MqttEntityConfigurationBuilders.Switch;
 using Sholo.HomeAssistant.Mqtt.MqttEntityConfigurations.Switch;
-using Sholo.Mqtt.ApplicationProvider;
-using Sholo.Mqtt.Consumer;
+using Sholo.Mqtt.Application.Provider;
 using Xunit;
 
 namespace Sholo.HomeAssistant.Test.Mqtt
@@ -44,25 +43,25 @@ namespace Sholo.HomeAssistant.Test.Mqtt
             mockOutboundMessageBus
                 .Setup(mb => mb.PublishMessage(It.Is<MqttApplicationMessage>(m =>
                     m.Payload.SequenceEqual(expectedDiscoveryPayload) &&
-                    m.Topic.Equals(switchMqttEntityConfiguration.DiscoveryTopic))))
+                    m.Topic.Equals(switchMqttEntityConfiguration.DiscoveryTopic, StringComparison.Ordinal))))
                 .Verifiable();
 
             mockOutboundMessageBus
                 .Setup(mb => mb.PublishMessage(It.Is<MqttApplicationMessage>(m =>
                     m.Payload.SequenceEqual(expectedStateOnPayload) &&
-                    m.Topic.Equals(switchMqttEntityConfiguration.EntityDefinition.StateTopic))))
+                    m.Topic.Equals(switchMqttEntityConfiguration.EntityDefinition.StateTopic, StringComparison.Ordinal))))
                 .Verifiable();
 
             mockOutboundMessageBus
                 .Setup(mb => mb.PublishMessage(It.Is<MqttApplicationMessage>(m =>
                     m.Payload.SequenceEqual(expectedStateOffPayload) &&
-                    m.Topic.Equals(switchMqttEntityConfiguration.EntityDefinition.StateTopic))))
+                    m.Topic.Equals(switchMqttEntityConfiguration.EntityDefinition.StateTopic, StringComparison.Ordinal))))
                 .Verifiable();
 
             mockOutboundMessageBus
                 .Setup(mb => mb.PublishMessage(It.Is<MqttApplicationMessage>(m =>
                     m.Payload.SequenceEqual(expectedDeletePayload) &&
-                    m.Topic.Equals(switchMqttEntityConfiguration.DiscoveryTopic))))
+                    m.Topic.Equals(switchMqttEntityConfiguration.DiscoveryTopic, StringComparison.Ordinal))))
                 .Verifiable();
 
             using (mcp)

@@ -5,8 +5,8 @@ using Sholo.HomeAssistant.Mqtt.EntityDefinitions;
 using Sholo.HomeAssistant.Mqtt.MessageBus;
 using Sholo.HomeAssistant.Mqtt.MqttEntityBindingManagers;
 using Sholo.HomeAssistant.Mqtt.MqttEntityConfigurations;
-using Sholo.Mqtt.ApplicationBuilderConfiguration;
-using Sholo.Mqtt.ApplicationProvider;
+using Sholo.Mqtt.Application.BuilderConfiguration;
+using Sholo.Mqtt.Application.Provider;
 
 namespace Sholo.HomeAssistant.Mqtt.ControlPanel
 {

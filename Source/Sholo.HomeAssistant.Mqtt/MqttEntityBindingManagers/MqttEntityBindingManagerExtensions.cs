@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Sholo.HomeAssistant.Mqtt.Entities;
 using Sholo.HomeAssistant.Mqtt.EntityDefinitions;
@@ -13,14 +14,14 @@ namespace Sholo.HomeAssistant.Mqtt.MqttEntityBindingManagers
             where TEntity : IEntity
             where TEntityDefinition : IEntityDefinition
             => manager.EntityConfigurations
-                .SingleOrDefault(x => x.EntityConfiguration.EntityDefinition.Name.Equals(name));
+                .SingleOrDefault(x => x.EntityConfiguration.EntityDefinition.Name.Equals(name, StringComparison.Ordinal));
 
         public static IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition> GetBindingByUniqueId<TMqttEntityConfiguration, TEntity, TEntityDefinition>(this IMqttEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> manager, string uniqueId)
             where TMqttEntityConfiguration : IMqttEntityConfiguration<TEntity, TEntityDefinition>
             where TEntity : IEntity
             where TEntityDefinition : IEntityDefinition
             => manager.EntityConfigurations
-                .SingleOrDefault(x => x.EntityConfiguration.EntityDefinition.UniqueId.Equals(uniqueId));
+                .SingleOrDefault(x => x.EntityConfiguration.EntityDefinition.UniqueId.Equals(uniqueId, StringComparison.Ordinal));
 
         public static TEntity GetEntityByName<TMqttEntityConfiguration, TEntity, TEntityDefinition>(this IMqttEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> manager, string name)
             where TMqttEntityConfiguration : IMqttEntityConfiguration<TEntity, TEntityDefinition>

@@ -4,15 +4,13 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive.Linq;
-using Sholo.HomeAssistant.Mqtt.CommandHandlers;
 using Sholo.HomeAssistant.Mqtt.Entities;
 using Sholo.HomeAssistant.Mqtt.EntityDefinitions;
 using Sholo.HomeAssistant.Mqtt.MessageBus;
 using Sholo.HomeAssistant.Mqtt.MqttEntityBindings;
 using Sholo.HomeAssistant.Mqtt.MqttEntityConfigurations;
-using Sholo.Mqtt;
-using Sholo.Mqtt.ApplicationBuilder;
-using Sholo.Mqtt.ApplicationProvider;
+using Sholo.Mqtt.Application.Builder;
+using Sholo.Mqtt.Application.Provider;
 
 namespace Sholo.HomeAssistant.Mqtt.MqttEntityBindingManagers
 {
@@ -66,33 +64,7 @@ namespace Sholo.HomeAssistant.Mqtt.MqttEntityBindingManagers
                 .GroupBy(x => (topicPattern: x.commandHandler.GetTopicPattern(x.configuration.EntityConfiguration.EntityDefinition), qualityOfServiceLevel: x.configuration.EntityConfiguration.DiscoveryMessageQualityOfServiceLevel))
                 .ToDictionary(x => x.Key, x => x.ToArray());
 
-            foreach (var topicHandler in topicHandlers)
-            {
-                var topicPattern = topicHandler.Key.topicPattern;
-                var qualityOfServiceLevel = topicHandler.Key.qualityOfServiceLevel;
-
-                mqttApplicationBuilder.Map(
-                    topicPattern,
-                    async ctx =>
-                    {
-                        var payload = ctx.GetPayloadAsString();
-
-                        // Logger.LogInformation("> [{topic}] {payload}", ctx.Topic, payload);
-
-                        foreach (var (cfg, handler) in topicHandler.Value)
-                        {
-                            var commandContext = new MqttCommandContext<TEntity, TEntityDefinition>(ctx, cfg.EntityConfiguration.Entity, cfg.EntityConfiguration.EntityDefinition);
-                            var result = await handler.ProcessCommand(commandContext, payload);
-                            if (result)
-                            {
-                                return true;
-                            }
-                        }
-
-                        return false;
-                    },
-                    qualityOfServiceLevel);
-            }
+            mqttApplicationBuilder.UseMiddleware(new EntityCommandMiddleware<TMqttEntityConfiguration, TEntity, TEntityDefinition>(topicHandlers));
         }
 
         public void Dispose()

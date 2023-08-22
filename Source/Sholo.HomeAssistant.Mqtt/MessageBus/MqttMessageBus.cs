@@ -30,7 +30,7 @@ namespace Sholo.HomeAssistant.Mqtt.MessageBus
 
         private async Task SendMessage(IManagedMqttClient client, MqttApplicationMessage message)
         {
-            Logger.LogInformation("< [{topic}] {payload}", message.Topic, message.ConvertPayloadToString());
+            Logger.LogInformation("< [{Topic}] {Payload}", message.Topic, message.ConvertPayloadToString());
             await client.PublishAsync(message);
         }
     }

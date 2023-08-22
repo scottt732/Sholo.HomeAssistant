@@ -79,7 +79,7 @@ namespace Sholo.HomeAssistant.Client.WebSockets.ConnectionService
                     throw new InvalidOperationException($"Illegal phase transition (from {originalValue} to {value})");
                 }
 
-                Logger.LogDebug("Phase changed from {originalValue} to {currentValue}", originalValue, value);
+                Logger.LogDebug("Phase changed from {OriginalValue} to {CurrentValue}", originalValue, value);
 
                 if (value == WebSocketsClientServicePhase.Online)
                 {
@@ -89,7 +89,7 @@ namespace Sholo.HomeAssistant.Client.WebSockets.ConnectionService
                 else if (value == WebSocketsClientServicePhase.Offline)
                 {
                     var connectionId = Interlocked.Increment(ref _connectionId);
-                    Logger.LogDebug("Incrementing connectionId to {connectionId}", connectionId);
+                    Logger.LogDebug("Incrementing connectionId to {ConnectionId}", connectionId);
 
                     OnlineEvent.Reset();
                     ConnectionStateChangesSubject.OnNext(WebsocketsConnectionState.Offline);
@@ -350,12 +350,8 @@ namespace Sholo.HomeAssistant.Client.WebSockets.ConnectionService
                         throw new InvalidOperationException();
                     }
 
-#if NETSTANDARD2_1
                     var memory = new ReadOnlyMemory<byte>(buffer.Array, buffer.Offset, result.Count);
                     await ms.WriteAsync(memory, cancellationToken);
-#else
-                    await ms.WriteAsync(buffer.Array, buffer.Offset, result.Count, cancellationToken);
-#endif
                 }
                 while (!result.EndOfMessage);
 
@@ -365,11 +361,11 @@ namespace Sholo.HomeAssistant.Client.WebSockets.ConnectionService
 
                     if (id.HasValue)
                     {
-                        Logger.LogDebug("Retrieved message of type {messageType}, Id {id}", messageType, id.Value);
+                        Logger.LogDebug("Retrieved message of type {MessageType}, Id {Id}", messageType, id.Value);
                     }
                     else if (messageType != HomeAssistantWsMessageType.Pong)
                     {
-                        Logger.LogDebug("Retrieved message of type {messageType}", messageType);
+                        Logger.LogDebug("Retrieved message of type {MessageType}", messageType);
                     }
 
                     if (messageType == HomeAssistantWsMessageType.AuthRequired)
@@ -391,7 +387,7 @@ namespace Sholo.HomeAssistant.Client.WebSockets.ConnectionService
                         var authResult = await ReadAsMessage<AuthResultMessage>(ms, cancellationToken);
                         if (authResult.MessageType == HomeAssistantWsMessageType.AuthInvalid)
                         {
-                            Logger.LogError($"Authentication failed: {authResult.Message}");
+                            Logger.LogError("Authentication failed: {Message}", authResult.Message);
                             throw new HomeAssistantAuthenticationException(authResult.Message);
                         }
                         else if (authResult.MessageType == HomeAssistantWsMessageType.AuthOk)

@@ -7,7 +7,7 @@ namespace Sholo.HomeAssistant.Mqtt.CommandHandlers
         public TEntity Entity { get; set; }
         public TEntityDefinition EntityDefinition { get; set; }
 
-        public MqttCommandContext(IMqttRequestContext context, TEntity entity, TEntityDefinition entityDefinition)
+        public MqttCommandContext(MqttRequestContext context, TEntity entity, TEntityDefinition entityDefinition)
             : base(context)
         {
             Entity = entity;

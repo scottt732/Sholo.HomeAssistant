@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <ParentDirectoryBuildTargets>$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))</ParentDirectoryBuildTargets>
+  </PropertyGroup>
+  <Import Project="$(ParentDirectoryBuildTargets)" Condition="Exists('$(ParentDirectoryBuildTargets)')"/>
+
+</Project>

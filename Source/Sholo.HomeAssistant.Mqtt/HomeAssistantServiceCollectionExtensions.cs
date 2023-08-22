@@ -5,7 +5,7 @@ using Sholo.HomeAssistant.DependencyInjection;
 using Sholo.HomeAssistant.Mqtt.ControlPanel;
 using Sholo.HomeAssistant.Mqtt.Dispatchers;
 using Sholo.HomeAssistant.Mqtt.MessageBus;
-using Sholo.Mqtt.ApplicationBuilderConfiguration;
+using Sholo.Mqtt.Application.BuilderConfiguration;
 
 namespace Sholo.HomeAssistant.Mqtt
 {
@@ -23,7 +23,7 @@ namespace Sholo.HomeAssistant.Mqtt
 
             services.AddHostedService<HomeAssistantOutboundMqttDispatcher>();
 
-            var configurationBuilder = new HomeAssistantMqttConfigurationBuilder(services.Configuration, services);
+            var configurationBuilder = new HomeAssistantMqttConfigurationBuilder(services);
             builderConfigurator?.Invoke(configurationBuilder);
 
             return services;

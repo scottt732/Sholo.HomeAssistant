@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 
 namespace Sholo.HomeAssistant
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class HomeAssistantMqttValueAttribute : Attribute
+    public sealed class HomeAssistantMqttValueAttribute : Attribute
     {
         public string MqttString { get; }
 

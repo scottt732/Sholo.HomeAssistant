@@ -3,7 +3,7 @@ using System;
 namespace Sholo.HomeAssistant
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class HomeAssistantDiscoveryMqttValueAttribute : Attribute
+    public sealed class HomeAssistantDiscoveryMqttValueAttribute : Attribute
     {
         public string MqttString { get; }
 

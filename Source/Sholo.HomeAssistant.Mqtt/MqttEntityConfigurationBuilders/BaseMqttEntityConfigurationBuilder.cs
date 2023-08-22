@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Sholo.HomeAssistant.Mqtt.MqttEntityConfigurationBuilders
         protected MqttApplicationMessage DiscoveryMessage { get; set; }
         protected MqttApplicationMessage DeleteMessage { get; set; }
 
-        protected List<ICommandHandler<TEntity, TEntityDefinition>> CommandHandlers { get; } = new List<ICommandHandler<TEntity, TEntityDefinition>>();
+        protected Collection<ICommandHandler<TEntity, TEntityDefinition>> CommandHandlers { get; } = new ();
 
         protected ComponentType ComponentType { get; }
 
@@ -169,11 +170,10 @@ namespace Sholo.HomeAssistant.Mqtt.MqttEntityConfigurationBuilders
         private string GetDiscoveryPayloadString(TEntityDefinition entityDefinition)
         {
             var sb = new StringBuilder();
-            using (var sw = new StringWriter(sb))
-            {
-                JsonSerializer.Serialize(sw, entityDefinition);
-                return sb.ToString();
-            }
+            using var sw = new StringWriter(sb);
+
+            JsonSerializer.Serialize(sw, entityDefinition);
+            return sb.ToString();
         }
     }
 }

@@ -14,7 +14,6 @@ using Newtonsoft.Json.Linq;
 using Sholo.HomeAssistant.Client.Events.StateChanged;
 using Sholo.HomeAssistant.Client.Messages.CameraThumbnails;
 using Sholo.HomeAssistant.Client.Messages.Config;
-using Sholo.HomeAssistant.Client.Messages.DiscoveryInfo;
 using Sholo.HomeAssistant.Client.Messages.Events;
 using Sholo.HomeAssistant.Client.Settings;
 using Sholo.HomeAssistant.Client.StateDeserializers;
@@ -27,8 +26,8 @@ namespace Sholo.HomeAssistant.Client.Rest
     public class HomeAssistantRestClient : IHomeAssistantRestClient
     {
         private HttpClient HttpClient { get; }
-        private JsonSerializerSettings JsonSerializerSettings { get; }
         private MediaTypeFormatter[] MediaTypeFormatters { get; }
+        private JsonSerializer JsonSerializer { get; }
         private IOptions<HomeAssistantClientOptions> HomeAssistantOptions { get; }
         private IStateProvider StateProvider { get; }
         private IStateCodeGenerator StateCodeGenerator { get; }
@@ -45,132 +44,168 @@ namespace Sholo.HomeAssistant.Client.Rest
             HomeAssistantOptions = homeAssistantOptions;
             StateProvider = stateProvider;
             StateCodeGenerator = stateCodeGenerator;
-            JsonSerializerSettings = HomeAssistantSerializerSettings.JsonSerializerSettings;
             Logger = logger;
 
             MediaTypeFormatters = new MediaTypeFormatter[]
             {
                 new JsonMediaTypeFormatter
                 {
-                    SerializerSettings = JsonSerializerSettings
+                    SerializerSettings = HomeAssistantSerializerSettings.JsonSerializerSettings
                 }
             };
+
+            JsonSerializer = JsonSerializer.Create(HomeAssistantSerializerSettings.JsonSerializerSettings);
         }
 
-        public Task<ConfigurationResult> GetConfigurationAsync(CancellationToken cancellationToken = default) => GetAsync<ConfigurationResult>("config", cancellationToken);
-        public Task<DiscoveryInfoResult> GetDiscoveryInfoAsync(CancellationToken cancellationToken = default) => GetAsync<DiscoveryInfoResult>("discovery_info", cancellationToken);
-        public Task<EventResult[]> GetEventsAsync(CancellationToken cancellationToken = default) => GetAsync<EventResult[]>("events", cancellationToken);
+        public async Task<bool> GetApiEnabledAsync(TimeSpan? requestTimeout = null, CancellationToken cancellationToken = default)
+        {
+            CancellationTokenSource cts = null;
+            try
+            {
+                CancellationToken token;
+                if (requestTimeout.HasValue && requestTimeout.Value != HttpClient.Timeout)
+                {
+                    cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                    cts.CancelAfter(requestTimeout.Value);
+                    token = cts.Token;
+                }
+                else
+                {
+                    token = cancellationToken;
+                }
+
+                var response = await HttpClient.GetAsync(RestClientUris.IsEnabled, token);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return false;
+                }
+
+                var result = await response.Content.ReadAsAsync<TestResult>(MediaTypeFormatters, cancellationToken);
+
+                if (result == null)
+                {
+                    return false;
+                }
+
+                if (string.IsNullOrEmpty(result.Message))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (TaskCanceledException)
+            {
+                return false;
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+            finally
+            {
+                cts?.Dispose();
+            }
+        }
+
+        public Task<ConfigurationResult> GetConfigurationAsync(CancellationToken cancellationToken = default) => GetAsync<ConfigurationResult>(RestClientUris.Config, cancellationToken);
+        public Task<EventResult[]> GetEventsAsync(CancellationToken cancellationToken = default) => GetAsync<EventResult[]>(RestClientUris.Events(), cancellationToken);
 
         // TODO: structure is different than websockets version
-        public Task<JToken> GetServicesAsync(CancellationToken cancellationToken = default) => GetAsync<JToken>("services", cancellationToken);
+        public Task<JToken> GetServicesAsync(CancellationToken cancellationToken = default) => GetAsync<JToken>(RestClientUris.Services, cancellationToken);
 
         public Task<EntityState[][]> GetHistoryAsync(string[] entityIds = null, DateTimeOffset? startTime = null, DateTimeOffset? endTime = null, CancellationToken cancellationToken = default)
             => GetHistoryAsync<EntityState>(entityIds, startTime, endTime, cancellationToken);
 
         public Task<TEntityState[][]> GetHistoryAsync<TEntityState>(string[] entityIds = null, DateTimeOffset? startTime = null, DateTimeOffset? endTime = null, CancellationToken cancellationToken = default)
             where TEntityState : EntityState
-        {
-            var filterSuffix = entityIds != null && entityIds.Length > 0
-                ? "filter_entity_id=" + string.Join(",", entityIds)
-                : null;
-
-            // ReSharper disable ConditionIsAlwaysTrueOrFalse
-            if (startTime.HasValue && endTime.HasValue)
-            {
-                var effectiveFilterSuffix = filterSuffix != null ? $"&{filterSuffix}" : string.Empty;
-                return GetAsync<TEntityState[][]>($"history/period/{startTime.Value:yyyy-MM-dd\\Thh:mm:sszzz}?end_time={endTime.Value:yyyy-MM-dd\\Thh:mm:sszzz}{effectiveFilterSuffix}", cancellationToken);
-            }
-
-            if (startTime.HasValue && !endTime.HasValue)
-            {
-                var effectiveFilterSuffix = filterSuffix != null ? $"?{filterSuffix}" : string.Empty;
-                return GetAsync<TEntityState[][]>($"history/period/{startTime.Value:yyyy-MM-dd\\Thh:mm:sszzz}{effectiveFilterSuffix}", cancellationToken);
-            }
-
-            if (!startTime.HasValue && endTime.HasValue)
-            {
-                var effectiveFilterSuffix = filterSuffix != null ? $"&{filterSuffix}" : string.Empty;
-                return GetAsync<TEntityState[][]>($"history/period/{DateTimeOffset.Now.AddDays(-1):yyyy-MM-dd\\Thh:mm:sszzz}?end_time={endTime.Value:yyyy-MM-dd\\Thh:mm:sszzz}{effectiveFilterSuffix}", cancellationToken);
-            }
-
-            if (!startTime.HasValue && !endTime.HasValue)
-            {
-                var effectiveFilterSuffix = filterSuffix != null ? $"?{filterSuffix}" : string.Empty;
-                return GetAsync<TEntityState[][]>($"history/period{effectiveFilterSuffix}", cancellationToken);
-            }
-
-            throw new InvalidOperationException("This is impossible");
-        }
+            => GetAsync<TEntityState[][]>(RestClientUris.History(entityIds, startTime, endTime), cancellationToken);
 
         public Task<EntityState> GetStateAsync(string entityId, CancellationToken cancellationToken = default)
             => GetStateAsync<EntityState>(entityId, cancellationToken);
 
         public Task<TEntityState> GetStateAsync<TEntityState>(string entityId, CancellationToken cancellationToken = default)
             where TEntityState : EntityState
-                => GetAsync<TEntityState>($"states/{entityId}", cancellationToken);
+                => GetAsync<TEntityState>(RestClientUris.StatesForEntity(entityId), cancellationToken);
 
         public async IAsyncEnumerable<EntityState> GetStatesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var response = await HttpClient.GetAsync("states", HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            var response = await HttpClient.GetAsync(
+                RestClientUris.States,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
-            var jsonSerializer = JsonSerializer.Create(JsonSerializerSettings);
+#if NETSTANDARD2_1
+            await using var responseStream = await response.Content.ReadAsStreamAsync();
+#elif NET5_0_OR_GREATER
+            await using var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+#endif
+            using var streamReader = new StreamReader(responseStream);
+            using var reader = new JsonTextReader(streamReader);
 
-            using (var responseStream = await response.Content.ReadAsStreamAsync())
-            using (var streamReader = new StreamReader(responseStream))
-            using (var reader = new JsonTextReader(streamReader))
+            while (await reader.ReadAsync(cancellationToken))
             {
-                while (await reader.ReadAsync(cancellationToken))
+                if (reader.TokenType == JsonToken.StartObject)
                 {
-                    if (reader.TokenType == JsonToken.StartObject)
-                    {
-                        var jObject = await JObject.LoadAsync(reader, cancellationToken);
-                        var entityId = jObject["entity_id"]?.Value<string>() ?? throw new InvalidOperationException();
-                        var state = jObject["state"]?.ToString();
-                        var attributes = jObject["attributes"]?.ToObject<Dictionary<string, object>>() ?? throw new InvalidOperationException();
+                    var jObject = await JObject.LoadAsync(reader, cancellationToken);
+                    var entityId = jObject["entity_id"]?.Value<string>() ?? throw new InvalidOperationException();
+                    var state = jObject["state"]?.ToString();
+                    var attributes = jObject["attributes"]?.ToObject<Dictionary<string, object>>() ?? throw new InvalidOperationException();
 
-                        StateCodeGenerator.Observe(entityId, state, attributes);
+                    StateCodeGenerator.Observe(entityId, state, attributes);
 
-                        var entityStateType = StateProvider.GetEntityStateType(entityId, attributes);
-                        var entityState = (EntityState)jObject.ToObject(entityStateType, jsonSerializer);
+                    var entityStateType = StateProvider.GetEntityStateType(entityId, attributes);
+                    var entityState = (EntityState)jObject.ToObject(entityStateType, JsonSerializer);
 
-                        yield return entityState;
-                    }
+                    yield return entityState;
                 }
             }
         }
 
         public async Task<string[]> GetErrorLogAsync(CancellationToken cancellationToken = default)
         {
-            var response = await HttpClient.GetAsync("error_log", cancellationToken);
+            var response = await HttpClient.GetAsync(
+                RestClientUris.ErrorLog,
+                cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
-#if NETSTANDARD2_0
-            using var stream = await response.Content.ReadAsStreamAsync();
-#else
-            await using var stream = await response.Content.ReadAsStreamAsync();
+#if NETSTANDARD2_1
+            using (var stream = await response.Content.ReadAsStreamAsync())
+#elif NET5_0_OR_GREATER
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 #endif
-            using var reader = new StreamReader(stream);
 
-            string line;
-            var lines = new List<string>();
-            while ((line = await reader.ReadLineAsync()) != null)
+            using (var reader = new StreamReader(stream))
             {
-                lines.Add(line);
-            }
+                string line;
+                var lines = new List<string>();
+                while ((line = await reader.ReadLineAsync()) != null)
+                {
+                    lines.Add(line);
+                }
 
-            return lines.ToArray();
+                return lines.ToArray();
+            }
         }
 
         public async Task<CameraThumbnailResult> GetCameraThumbnailAsync(string entityId, CancellationToken cancellationToken = default)
         {
-            var response = await HttpClient.GetAsync($"/api/camera_proxy/camera.{entityId}", cancellationToken);
+            var response = await HttpClient.GetAsync(
+                RestClientUris.CameraThumbnail(entityId),
+                cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
+#if NETSTANDARD2_1
             var content = await response.Content.ReadAsByteArrayAsync();
+#elif NET5_0_OR_GREATER
+            var content = await response.Content.ReadAsByteArrayAsync(cancellationToken);
+#endif
+
             var contentType = response.Content.Headers.ContentType.MediaType;
 
             return new CameraThumbnailResult(content, contentType);
@@ -191,7 +226,7 @@ namespace Sholo.HomeAssistant.Client.Rest
             };
 
             var response = await HttpClient.PostAsync(
-                $"/api/states/{entityId}",
+                RestClientUris.StatesForEntity(entityId),
                 entityState,
                 MediaTypeFormatters[0],
                 cancellationToken
@@ -225,7 +260,7 @@ namespace Sholo.HomeAssistant.Client.Rest
             };
 
             var response = await HttpClient.PostAsync(
-                $"/api/states/{entityId}",
+                RestClientUris.StatesForEntity(entityId),
                 entityState,
                 MediaTypeFormatters[0],
                 cancellationToken
@@ -250,7 +285,7 @@ namespace Sholo.HomeAssistant.Client.Rest
         public async Task<MessageResult> FireEvent(string eventType, CancellationToken cancellationToken = default)
         {
             var response = await HttpClient.PostAsync(
-                $"/api/events/{eventType}",
+                new Uri($"/api/events/{eventType}", UriKind.Relative),
                 null,
                 cancellationToken
             );
@@ -265,7 +300,7 @@ namespace Sholo.HomeAssistant.Client.Rest
             // TODO: Check overload w/dictionary
 
             var response = await HttpClient.PostAsync(
-                $"/api/events/{eventType}",
+                new Uri($"/api/events/{eventType}", UriKind.Relative),
                 eventData,
                 MediaTypeFormatters[0],
                 cancellationToken
@@ -279,7 +314,7 @@ namespace Sholo.HomeAssistant.Client.Rest
         public async Task<MessageResult> FireEvent<TEventData>(string eventType, TEventData eventData, CancellationToken cancellationToken = default)
         {
             var response = await HttpClient.PostAsync(
-                $"/api/events/{eventType}",
+                new Uri($"/api/events/{eventType}", UriKind.Relative),
                 eventData,
                 MediaTypeFormatters[0],
                 cancellationToken
@@ -295,10 +330,7 @@ namespace Sholo.HomeAssistant.Client.Rest
             throw new NotImplementedException();
         }
 
-        // TODO: Remove me
-        public Task<JToken> GetTestAsync(string path, CancellationToken cancellationToken = default) => GetAsync<JToken>(path, cancellationToken);
-
-        private async Task<TResult> GetAsync<TResult>(string path, CancellationToken cancellationToken)
+        private async Task<TResult> GetAsync<TResult>(Uri path, CancellationToken cancellationToken)
         {
             var response = await HttpClient.GetAsync(path, cancellationToken);
 

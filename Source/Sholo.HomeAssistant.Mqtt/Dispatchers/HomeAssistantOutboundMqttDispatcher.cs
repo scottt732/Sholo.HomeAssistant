@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using MQTTnet.Extensions.ManagedClient;
 using Sholo.HomeAssistant.Mqtt.ControlPanel;
 using Sholo.HomeAssistant.Mqtt.MessageBus;
-using Sholo.Mqtt.ApplicationProvider;
+using Sholo.Mqtt.Application.Provider;
 
 namespace Sholo.HomeAssistant.Mqtt.Dispatchers
 {

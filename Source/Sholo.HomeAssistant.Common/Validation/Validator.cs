@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -20,13 +20,13 @@ namespace Sholo.HomeAssistant.Validation
             Logger = logger;
         }
 
-        public bool Validate<TObject>(TObject @object)
+        public bool Validate<TObject>(TObject obj)
             where TObject : class
         {
-            var context = new ValidationContext(@object, ServiceProvider, items: null);
+            var context = new ValidationContext(obj, ServiceProvider, items: null);
             var results = new List<ValidationResult>();
 
-            var isValid = System.ComponentModel.DataAnnotations.Validator.TryValidateObject(@object, context, results);
+            var isValid = System.ComponentModel.DataAnnotations.Validator.TryValidateObject(obj, context, results);
             if (!isValid)
             {
                 var sb = new StringBuilder();
@@ -36,7 +36,7 @@ namespace Sholo.HomeAssistant.Validation
                     sb.AppendLine($" - {result.ErrorMessage} ({string.Join(", ", result.MemberNames)})");
                 }
 
-                Logger.LogWarning(sb.ToString());
+                Logger.LogWarning("{Message}", sb.ToString());
                 return false;
             }
 

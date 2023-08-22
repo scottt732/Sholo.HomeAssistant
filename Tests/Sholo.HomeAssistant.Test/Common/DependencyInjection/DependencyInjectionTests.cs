@@ -55,7 +55,7 @@ namespace Sholo.HomeAssistant.Test.Common.DependencyInjection
 
             var serviceCollection = new ServiceCollection();
 
-            var homeAssistantServiceCollection = serviceCollection.AddHomeAssistant(configurationRoot);
+            var homeAssistantServiceCollection = serviceCollection.AddHomeAssistant(null);
 
             registrationConfigurator?.Invoke(homeAssistantServiceCollection);
 

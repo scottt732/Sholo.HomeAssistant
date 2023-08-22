@@ -1,3 +1,4 @@
+using System.Linq;
 using Sholo.HomeAssistant.Mqtt.CommandHandlers.DeviceTrigger;
 using Sholo.HomeAssistant.Mqtt.Entities.DeviceTrigger;
 using Sholo.HomeAssistant.Mqtt.EntityDefinitionBuilders.DeviceTrigger;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using MQTTnet;
 using MQTTnet.Protocol;
@@ -28,9 +29,9 @@ namespace Sholo.HomeAssistant.Mqtt.MqttEntityConfigurationBuilders
 
         private List<IStateChangeHandler<TEntity, TEntityDefinition>> StateChangeHandlers { get; } = new List<IStateChangeHandler<TEntity, TEntityDefinition>>();
 
-        public TSelfInterface WithStateMessageQualityOfServiceLevel(MqttQualityOfServiceLevel? stateMessageQualityOfServiceLevel)
+        public TSelfInterface WithStateMessageQualityOfServiceLevel(MqttQualityOfServiceLevel? qualityOfServiceLevel)
         {
-            StateMessageQualityOfServiceLevel = stateMessageQualityOfServiceLevel;
+            StateMessageQualityOfServiceLevel = qualityOfServiceLevel;
             return (TSelf)this;
         }
 

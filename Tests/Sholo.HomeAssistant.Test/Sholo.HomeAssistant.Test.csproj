@@ -22,7 +22,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Update="Moq" Version="4.16.1" />
   </ItemGroup>
 

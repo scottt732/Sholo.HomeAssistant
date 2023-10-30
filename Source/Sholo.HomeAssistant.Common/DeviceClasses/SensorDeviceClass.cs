@@ -1,68 +1,65 @@
-using JetBrains.Annotations;
+namespace Sholo.HomeAssistant.DeviceClasses;
 
-namespace Sholo.HomeAssistant.DeviceClasses
+/// <summary>
+/// Sensor device classes
+/// </summary>
+/// <remarks>
+/// See <a href="https://www.home-assistant.io/integrations/sensor/#device-class">documentation</a>
+/// </remarks>
+[PublicAPI]
+public enum SensorDeviceClass
 {
     /// <summary>
-    /// Sensor device classes
+    /// Generic sensor. This is the default and doesn't need to be set.
     /// </summary>
-    /// <remarks>
-    /// See <a href="https://www.home-assistant.io/integrations/sensor/#device-class">documentation</a>
-    /// </remarks>
-    [PublicAPI]
-    public enum SensorDeviceClass
-    {
-        /// <summary>
-        /// Generic sensor. This is the default and doesn't need to be set.
-        /// </summary>
-        [HomeAssistantMqttValue("")]
-        None,
+    [HomeAssistantMqttValue("")]
+    None,
 
-        /// <summary>
-        /// battery: Percentage of battery that is left.
-        /// </summary>
-        [HomeAssistantMqttValue("battery")]
-        Battery,
+    /// <summary>
+    /// battery: Percentage of battery that is left.
+    /// </summary>
+    [HomeAssistantMqttValue("battery")]
+    Battery,
 
-        /// <summary>
-        /// humidity: Percentage of humidity in the air.
-        /// </summary>
-        [HomeAssistantMqttValue("humidity")]
-        Humidity,
+    /// <summary>
+    /// humidity: Percentage of humidity in the air.
+    /// </summary>
+    [HomeAssistantMqttValue("humidity")]
+    Humidity,
 
-        /// <summary>
-        /// illuminance: The current light level in lx or lm.
-        /// </summary>
-        [HomeAssistantMqttValue("illuminance")]
-        Illuminance,
+    /// <summary>
+    /// illuminance: The current light level in lx or lm.
+    /// </summary>
+    [HomeAssistantMqttValue("illuminance")]
+    Illuminance,
 
-        /// <summary>
-        /// signal_strength: Signal strength in dB or dBm.
-        /// </summary>
-        [HomeAssistantMqttValue("signal_strength")]
-        SignalStrength,
+    /// <summary>
+    /// signal_strength: Signal strength in dB or dBm.
+    /// </summary>
+    [HomeAssistantMqttValue("signal_strength")]
+    SignalStrength,
 
-        /// <summary>
-        /// temperature: Temperature in °C or °F.
-        /// </summary>
-        [HomeAssistantMqttValue("temperature")]
-        Temperature,
+    /// <summary>
+    /// temperature: Temperature in °C or °F.
+    /// </summary>
+    [HomeAssistantMqttValue("temperature")]
+    Temperature,
 
-        /// <summary>
-        /// power: Power in W or kW.
-        /// </summary>
-        [HomeAssistantMqttValue("power")]
-        Power,
+    /// <summary>
+    /// power: Power in W or kW.
+    /// </summary>
+    [HomeAssistantMqttValue("power")]
+    Power,
 
-        /// <summary>
-        /// pressure: Pressure in hPa or mbar.
-        /// </summary>
-        [HomeAssistantMqttValue("pressure")]
-        Pressure,
+    /// <summary>
+    /// pressure: Pressure in hPa or mbar.
+    /// </summary>
+    [HomeAssistantMqttValue("pressure")]
+    Pressure,
 
-        /// <summary>
-        /// timestamp: Datetime object or timestamp string.
-        /// </summary>
-        [HomeAssistantMqttValue("timestamp")]
-        Timestamp
-    }
+    /// <summary>
+    /// timestamp: Datetime object or timestamp string.
+    /// </summary>
+    [HomeAssistantMqttValue("timestamp")]
+    Timestamp
 }

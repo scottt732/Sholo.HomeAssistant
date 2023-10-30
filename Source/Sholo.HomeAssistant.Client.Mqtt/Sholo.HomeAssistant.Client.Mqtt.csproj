@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Build">
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Product>Sholo.HomeAssistant.Mqtt</Product>
+    <Description>Tools for exposing .NET code as Home Assistant devices using MQTT for discovery, state, and commands</Description>
+    <PackageTags>HomeAssistant;Automation;Reactive;Rx;Mqtt</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sholo.HomeAssistant.Common\Sholo.HomeAssistant.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SolutionName)' != 'HomeAutomation'">
+    <PackageReference Include="Sholo.Mqtt" Version="*-*" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SolutionName)' == 'HomeAutomation'">
+    <ProjectReference Include="$(SmartSolutionDir)\Libraries\Sholo.Mqtt\Source\Sholo.Mqtt\Sholo.Mqtt.csproj" />
+  </ItemGroup>
+
+</Project>

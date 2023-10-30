@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Sholo.HomeAssistant.Client.Messages.Events;
+using Sholo.HomeAssistant.Client.WebSockets.Messages.Events;
 
 namespace Sholo.HomeAssistant.Test.Client.Rest;
 
@@ -41,7 +40,7 @@ public static class RestFixtures
         public static readonly string[] AllowlistExternalUrls =
             new[] { "https://www.someserver.com", "https://www.someotherserver.com" };
 
-        public static readonly string Version = DateTime.Now.ToString("yyyy.MM.d");
+        public static readonly string Version = DateTime.Now.ToString("yyyy.MM.d", CultureInfo.InvariantCulture);
 
         public static readonly string[] Components = new[]
         {

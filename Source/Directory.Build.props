@@ -6,7 +6,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-
   <PropertyGroup Label="Source Link">
     <!-- Optional: Declare that the Repository URL can be published to NuSpec -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -22,6 +21,10 @@
 
   <ItemGroup Label="Files">
     <None Include="..\..\Images\Icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="JetBrains.Annotations" />
   </ItemGroup>
 
 </Project>

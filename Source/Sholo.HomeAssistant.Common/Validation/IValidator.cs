@@ -1,8 +1,7 @@
-namespace Sholo.HomeAssistant.Validation
+namespace Sholo.HomeAssistant.Validation;
+
+public interface IValidator
 {
-    public interface IValidator
-    {
-        bool Validate<TMessage>(TMessage obj)
-            where TMessage : class;
-    }
+    bool Validate<TMessage>(TMessage obj)
+        where TMessage : class;
 }

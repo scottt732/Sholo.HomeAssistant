@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="General rules" Description="Style + Rules - Laziness" ToolsVersion="16.0">
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
     <Rule Id="CS1591" Action="None" />
@@ -14,7 +14,7 @@
     <Rule Id="CA1812" Action="None" />
     <Rule Id="CA1819" Action="None" />
     <Rule Id="CA1822" Action="None" />
-    <Rule Id="CA2007" Action="Info" />
+    <Rule Id="CA2007" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
     <Rule Id="CA1303" Action="None" />
@@ -27,9 +27,11 @@
     <Rule Id="VSTHRD200" Action="Info" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1000" Action="None" />
     <Rule Id="SA1009" Action="None" />
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1111" Action="None" />
+    <Rule Id="SA1118" Action="None" />
     <Rule Id="SA1200" Action="None" />
     <Rule Id="SA1201" Action="None" />
     <Rule Id="SA1309" Action="None" />

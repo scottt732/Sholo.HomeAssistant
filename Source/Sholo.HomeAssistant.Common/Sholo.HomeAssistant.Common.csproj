@@ -2,49 +2,28 @@
 
   <PropertyGroup Label="Build">
     <RootNamespace>Sholo.HomeAssistant</RootNamespace>
-    <TargetFrameworks>netstandard2.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
     <Product>Sholo.HomeAssistant</Product>
     <Description>Common classes for Sholo.HomeAssistant.Client and Sholo.HomeAssistant.Mqtt</Description>
     <PackageTags>HomeAssistant;Automation;Reactive;Rx</PackageTags>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[2.1.0,)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[2.1.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[2.1.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="[2.1.0,)" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="[4.7.0,)" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[5.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[5.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[5.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="[5.0.0,)" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[6.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[6.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[6.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="[6.0.0,)" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[7.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[7.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[7.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="[7.0.0,)" />
+    <PackageReference Include="MiniValidation" Version="0.9.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="[12.0.1,)" />
-    <PackageReference Include="System.Linq.Async" Version="[5.0.0,)" />
-    <PackageReference Include="System.Reactive" Version="[5.0.0,)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(SolutionName)' != 'HomeAutomation'">
-    <PackageReference Include="Sholo.Utils" Version="*-*" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(SolutionName)' == 'HomeAutomation'">
-    <ProjectReference Include="$(SmartSolutionDir)\Sholo\Libraries\Sholo.Utils\Source\Sholo.Utils\Sholo.Utils.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="[13.0.3,)" />
+    <PackageReference Include="System.Linq.Async" Version="[6.0.1,)" />
+    <PackageReference Include="System.Reactive" Version="[6.0.0,)" />
   </ItemGroup>
 
 </Project>

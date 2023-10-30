@@ -35,9 +35,9 @@
   </ItemGroup>
 
   <ItemGroup Label="Package References">
-    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" Version="2021.3.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" PrivateAssets="All" Version="16.8.55" />
-    <PackageReference Include="MinVer" PrivateAssets="All" Version="2.3.1" />
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" Version="2023.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" PrivateAssets="All" Version="17.7.30" />
+    <PackageReference Include="MinVer" PrivateAssets="All" Version="4.3.0" />
     <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.1.118" />
   </ItemGroup>
 

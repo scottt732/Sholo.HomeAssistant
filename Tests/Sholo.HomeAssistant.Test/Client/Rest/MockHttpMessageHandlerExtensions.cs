@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sholo.HomeAssistant.Test.Client.Rest;
 
+[PublicAPI]
 public class TestHttpMessageHandler : HttpMessageHandler
 {
     private IRequestConfigurationProvider ConfigurationProvider { get; } = new RequestConfigurationProvider();
@@ -26,13 +27,13 @@ public class TestHttpMessageHandler : HttpMessageHandler
 
     public TestHttpMessageHandler Configure(Func<HttpRequestMessage, bool> requestMatcher, HttpResponseMessage response)
     {
-        ConfigurationProvider.Configure(requestMatcher, req => Task.FromResult(response));
+        ConfigurationProvider.Configure(requestMatcher, _ => Task.FromResult(response));
         return this;
     }
 
     public TestHttpMessageHandler Configure(Func<HttpRequestMessage, bool> requestMatcher, HttpStatusCode statusCode)
     {
-        ConfigurationProvider.Configure(requestMatcher, req => Task.FromResult(new HttpResponseMessage(statusCode)));
+        ConfigurationProvider.Configure(requestMatcher, _ => Task.FromResult(new HttpResponseMessage(statusCode)));
         return this;
     }
 
@@ -44,20 +45,20 @@ public class TestHttpMessageHandler : HttpMessageHandler
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        return ConfigurationProvider.GetResponse(request);
+        return ConfigurationProvider.GetResponseAsync(request);
     }
 
-    private class RequestConfigurationProvider : IRequestConfigurationProvider
+    private sealed class RequestConfigurationProvider : IRequestConfigurationProvider
     {
-        private List<IRequestConfiguration> Configurations { get; } = new ();
+        private List<IRequestConfiguration> Configurations { get; } = new();
 
-        public async Task<HttpResponseMessage> GetResponse(HttpRequestMessage message)
+        public async Task<HttpResponseMessage> GetResponseAsync(HttpRequestMessage message)
         {
             var matchingConfiguration = Configurations.FirstOrDefault(c => c.IsMatch(message));
 
             if (matchingConfiguration != null)
             {
-                return await matchingConfiguration.GetResponse(message);
+                return await matchingConfiguration.GetResponseAsync(message);
             }
 
             return new HttpResponseMessage(HttpStatusCode.NotFound);
@@ -76,7 +77,7 @@ public class TestHttpMessageHandler : HttpMessageHandler
 
     private interface IRequestProvider
     {
-        Task<HttpResponseMessage> GetResponse(HttpRequestMessage message);
+        Task<HttpResponseMessage> GetResponseAsync(HttpRequestMessage message);
     }
 
     private interface IRequestConfiguration : IRequestProvider
@@ -84,13 +85,13 @@ public class TestHttpMessageHandler : HttpMessageHandler
         bool IsMatch(HttpRequestMessage message);
     }
 
-    private class RequestConfiguration : IRequestConfiguration
+    private sealed class RequestConfiguration : IRequestConfiguration
     {
         private Func<HttpRequestMessage, bool> RequestMatcher { get; }
         private Func<HttpRequestMessage, Task<HttpResponseMessage>> ResponseFactory { get; }
 
         public bool IsMatch(HttpRequestMessage message) => RequestMatcher.Invoke(message);
-        public Task<HttpResponseMessage> GetResponse(HttpRequestMessage message) => ResponseFactory.Invoke(message);
+        public Task<HttpResponseMessage> GetResponseAsync(HttpRequestMessage message) => ResponseFactory.Invoke(message);
 
         public RequestConfiguration(Func<HttpRequestMessage, bool> requestMatcher, Func<HttpRequestMessage, Task<HttpResponseMessage>> responseFactory)
         {

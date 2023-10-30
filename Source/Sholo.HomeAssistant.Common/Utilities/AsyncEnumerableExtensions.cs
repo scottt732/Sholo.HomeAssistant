@@ -3,29 +3,27 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 
-namespace Sholo.HomeAssistant.Utilities
+namespace Sholo.HomeAssistant.Utilities;
+
+[PublicAPI]
+public static class AsyncEnumerableExtensions
 {
-    [PublicAPI]
-    public static class AsyncEnumerableExtensions
+    public static async IAsyncEnumerable<T> WithEnforcedCancellationAsync<T>(
+        this IAsyncEnumerable<T> source,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        public static async IAsyncEnumerable<T> WithEnforcedCancellation<T>(
-            this IAsyncEnumerable<T> source,
-            [EnumeratorCancellation] CancellationToken cancellationToken)
+        if (source == null)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            throw new ArgumentNullException(nameof(source));
+        }
 
+        cancellationToken.ThrowIfCancellationRequested();
+
+        await foreach (var item in source.WithCancellation(cancellationToken))
+        {
             cancellationToken.ThrowIfCancellationRequested();
-
-            await foreach (var item in source.WithCancellation(cancellationToken))
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                yield return item;
-            }
+            yield return item;
         }
     }
 }

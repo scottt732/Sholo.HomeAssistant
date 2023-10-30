@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
-    <TargetFrameworks>netstandard2.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
@@ -10,43 +10,20 @@
     <PackageTags>HomeAssistant;Automation;Reactive;Rx</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="[3.1.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="[3.1.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="[3.1.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="[3.1.0,)" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="[5.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="[5.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="[5.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="[5.0.0,)" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="[6.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="[6.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="[6.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="[6.0.0,)" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="[7.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="[7.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="[7.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="[7.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="[7.0.0,)" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Events\CallService\" />
-    <Folder Include="Events\ComponentLoaded\" />
-    <Folder Include="Events\AutomationTriggered\" />
-    <Folder Include="Events\ScriptStarted\" />
-    <Folder Include="Events\PlatformDiscovered\" />
-    <Folder Include="Events\ServiceExecuted\" />
-    <Folder Include="Events\ServiceRegistered\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Sholo.HomeAssistant.Common\Sholo.HomeAssistant.Common.csproj" />
+    <ProjectReference Include="..\Sholo.HomeAssistant.Client.Mqtt\Sholo.HomeAssistant.Client.Mqtt.csproj" />
+    <ProjectReference Include="..\Sholo.HomeAssistant.Client.Rest\Sholo.HomeAssistant.Client.Rest.csproj" />
+    <ProjectReference Include="..\Sholo.HomeAssistant.Client.Supervisor\Sholo.HomeAssistant.Client.Supervisor.csproj" />
+    <ProjectReference Include="..\Sholo.HomeAssistant.Client.WebSockets\Sholo.HomeAssistant.Client.WebSockets.csproj" />
+    <ProjectReference Include="..\Sholo.HomeAssistant.Domains.Builtin\Sholo.HomeAssistant.Domains.Builtin.csproj" />
   </ItemGroup>
 
 </Project>

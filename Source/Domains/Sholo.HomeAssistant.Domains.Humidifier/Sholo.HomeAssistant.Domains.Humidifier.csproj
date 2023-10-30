@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Folder Include="Client\Http\EntityStateDeserializers\" />
+    <Folder Include="Client\Http\EntityStates\" />
+    <Folder Include="Client\Mqtt\EntityConfigurationBuilders\" />
+    <Folder Include="Client\Mqtt\EntityConfigurations\" />
+    <Folder Include="Client\Mqtt\EntityDefinitionBuilders\" />
+    <Folder Include="Client\Mqtt\EntityDefinitions\" />
+    <Folder Include="Domains\" />
+  </ItemGroup>
+</Project>

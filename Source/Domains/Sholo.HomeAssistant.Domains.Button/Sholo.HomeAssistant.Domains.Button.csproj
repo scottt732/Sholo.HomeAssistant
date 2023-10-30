@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Folder Include="Client\Http\EntityStateDeserializers\" />
+    <Folder Include="Client\Http\EntityStates\" />
+  </ItemGroup>
+</Project>

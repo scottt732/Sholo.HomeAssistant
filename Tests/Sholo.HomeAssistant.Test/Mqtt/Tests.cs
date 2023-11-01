@@ -11,7 +11,6 @@ using Sholo.HomeAssistant.Client.Mqtt.EntityConfigurations;
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitionBuilders;
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
 using Sholo.HomeAssistant.Client.Mqtt.MessageBus;
-using Sholo.HomeAssistant.Domains.Mqtt;
 using Sholo.Mqtt.Application.Provider;
 
 namespace Sholo.HomeAssistant.Test.Mqtt;

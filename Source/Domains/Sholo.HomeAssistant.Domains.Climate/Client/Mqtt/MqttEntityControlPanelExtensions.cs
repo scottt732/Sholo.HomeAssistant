@@ -10,11 +10,11 @@ namespace Sholo.HomeAssistant.Client.Mqtt;
 public static class MqttEntityControlPanelExtensions
 {
     public static IEntityBindingManager<IClimateMqttEntityConfiguration, IClimate, IClimateEntityDefinition> Climate(this IMqttEntityControlPanel controlPanel)
-        => controlPanel.EntitiesOfType<IClimateMqttEntityConfiguration, IClimate, IClimateEntityDefinition>(DomainRegistry.Instance.Climate()); // TODO: Not stateful?!
+        => controlPanel.EntitiesOfType<ClimateDomain, IClimateMqttEntityConfiguration, IClimate, IClimateEntityDefinition>(); // TODO: Not stateful?!
 
     public static IMqttEntityControlPanel AddClimate(this IMqttEntityControlPanel controlPanel, IClimateMqttEntityConfiguration configuration)
     {
-        controlPanel.AddEntity<IClimateMqttEntityConfiguration, IClimate, IClimateEntityDefinition>(DomainRegistry.Instance.Climate(), configuration); // TODO: Not stateful?!
+        controlPanel.AddEntity<ClimateDomain, IClimateMqttEntityConfiguration, IClimate, IClimateEntityDefinition>(configuration); // TODO: Not stateful?!
         return controlPanel;
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sholo.HomeAssistant;
-using Sholo.HomeAssistant.Mqtt;
+using Sholo.HomeAssistant.Client;
 
 await Host.CreateDefaultBuilder(args)
     .ConfigureLogging(lb =>
@@ -13,7 +13,8 @@ await Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((ctx, services) =>
     {
-        services.AddHomeAssistant(ctx.Configuration.GetSection("homeassistant")).AddMqtt(_ => { });
+        services.AddHomeAssistant(ctx.Configuration.GetSection("homeassistant"))
+            .WithMqttClient(_ => { });
     })
     .UseConsoleLifetime(opt =>
     {

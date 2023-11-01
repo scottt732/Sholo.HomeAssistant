@@ -1,5 +1,6 @@
 namespace Sholo.HomeAssistant.Domains;
 
+[PublicAPI]
 public class DeviceTriggerDomain : BaseDomain
 {
     public override string Name { get; } = "device_trigger";

@@ -20,7 +20,6 @@
     <ProjectReference Include="..\Domains\Sholo.HomeAssistant.Domains.Cover\Sholo.HomeAssistant.Domains.Cover.csproj" />
     <ProjectReference Include="..\Domains\Sholo.HomeAssistant.Domains.DeviceTracker\Sholo.HomeAssistant.Domains.DeviceTracker.csproj" />
     <ProjectReference Include="..\Domains\Sholo.HomeAssistant.Domains.DeviceTrigger\Sholo.HomeAssistant.Domains.DeviceTrigger.csproj" />
-    <ProjectReference Include="..\Domains\Sholo.HomeAssistant.Domains.Display\Sholo.HomeAssistant.Domains.Display.csproj" />
     <ProjectReference Include="..\Domains\Sholo.HomeAssistant.Domains.Event\Sholo.HomeAssistant.Domains.Event.csproj" />
     <ProjectReference Include="..\Domains\Sholo.HomeAssistant.Domains.Fan\Sholo.HomeAssistant.Domains.Fan.csproj" />
     <ProjectReference Include="..\Domains\Sholo.HomeAssistant.Domains.Group\Sholo.HomeAssistant.Domains.Group.csproj" />

@@ -1,12 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>Sholo.HomeAssistant.Client</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sholo.HomeAssistant.Client.Mqtt\Sholo.HomeAssistant.Client.Mqtt.csproj" />
     <ProjectReference Include="..\Sholo.HomeAssistant.Common\Sholo.HomeAssistant.Common.csproj" />
   </ItemGroup>
 

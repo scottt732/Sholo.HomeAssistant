@@ -12,22 +12,26 @@ public interface IMqttEntityControlPanel : IDisposable
     void SendDiscoveryAll();
     void DeleteAll();
 
-    public IEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> StatefulEntitiesOfType<TMqttEntityConfiguration, TEntity, TEntityDefinition>(IDomain domain)
+    public IEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> StatefulEntitiesOfType<TDomain, TMqttEntityConfiguration, TEntity, TEntityDefinition>()
+        where TDomain : class, IDomain, new()
         where TMqttEntityConfiguration : IMqttStatefulEntityConfiguration<TEntity, TEntityDefinition>
         where TEntity : IStatefulEntity
         where TEntityDefinition : IStatefulEntityDefinition;
 
-    public IEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> EntitiesOfType<TMqttEntityConfiguration, TEntity, TEntityDefinition>(IDomain domain)
+    public IEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> EntitiesOfType<TDomain, TMqttEntityConfiguration, TEntity, TEntityDefinition>()
+        where TDomain : class, IDomain, new()
         where TMqttEntityConfiguration : IMqttEntityConfiguration<TEntity, TEntityDefinition>
         where TEntity : IEntity
         where TEntityDefinition : IEntityDefinition;
 
-    void AddEntity<TMqttEntityConfiguration, TEntity, TEntityDefinition>(IDomain domain, TMqttEntityConfiguration entityConfiguration)
+    void AddEntity<TDomain, TMqttEntityConfiguration, TEntity, TEntityDefinition>(TMqttEntityConfiguration entityConfiguration)
+        where TDomain : class, IDomain, new()
         where TMqttEntityConfiguration : IMqttEntityConfiguration<TEntity, TEntityDefinition>
         where TEntity : IEntity
         where TEntityDefinition : IEntityDefinition;
 
-    void AddStatefulEntity<TMqttEntityConfiguration, TEntity, TEntityDefinition>(IDomain domain, TMqttEntityConfiguration entityConfiguration)
+    void AddStatefulEntity<TDomain, TMqttEntityConfiguration, TEntity, TEntityDefinition>(TMqttEntityConfiguration entityConfiguration)
+        where TDomain : class, IDomain, new()
         where TMqttEntityConfiguration : IMqttStatefulEntityConfiguration<TEntity, TEntityDefinition>
         where TEntity : IStatefulEntity
         where TEntityDefinition : IStatefulEntityDefinition;

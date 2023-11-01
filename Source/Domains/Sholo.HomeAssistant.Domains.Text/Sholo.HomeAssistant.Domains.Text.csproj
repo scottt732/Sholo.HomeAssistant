@@ -6,6 +6,5 @@
     <Folder Include="Client\Mqtt\EntityConfigurations\" />
     <Folder Include="Client\Mqtt\EntityDefinitionBuilders\" />
     <Folder Include="Client\Mqtt\EntityDefinitions\" />
-    <Folder Include="Domains\" />
   </ItemGroup>
 </Project>

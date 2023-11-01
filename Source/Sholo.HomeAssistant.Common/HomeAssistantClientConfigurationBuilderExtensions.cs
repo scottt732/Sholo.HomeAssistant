@@ -7,21 +7,21 @@ namespace Sholo.HomeAssistant;
 [PublicAPI]
 public static class HomeAssistantClientConfigurationBuilderExtensions
 {
-    public static IHomeAssistantClientConfigurationBuilder WithStateDeserializer<TStateDeserializer>(this IHomeAssistantClientConfigurationBuilder configurationBuilder)
+    public static IHomeAssistantHttpClientConfigurationBuilder WithStateDeserializer<TStateDeserializer>(this IHomeAssistantHttpClientConfigurationBuilder configurationBuilder)
         where TStateDeserializer : class, IStateDeserializer
     {
         configurationBuilder.ServiceCollection.AddSingleton<IStateDeserializer, TStateDeserializer>();
         return configurationBuilder;
     }
 
-    public static IHomeAssistantClientConfigurationBuilder WithEntityStateDeserializer<TEntityStateDeserializer>(this IHomeAssistantClientConfigurationBuilder configurationBuilder)
+    public static IHomeAssistantHttpClientConfigurationBuilder WithEntityStateDeserializer<TEntityStateDeserializer>(this IHomeAssistantHttpClientConfigurationBuilder configurationBuilder)
         where TEntityStateDeserializer : class, IEntityStateDeserializer
     {
         configurationBuilder.ServiceCollection.AddSingleton<IEntityStateDeserializer, TEntityStateDeserializer>();
         return configurationBuilder;
     }
 
-    public static IHomeAssistantClientConfigurationBuilder WithStateCodeGenerator<TStateCodeGenerator>(this IHomeAssistantClientConfigurationBuilder configurationBuilder)
+    public static IHomeAssistantHttpClientConfigurationBuilder WithStateCodeGenerator<TStateCodeGenerator>(this IHomeAssistantHttpClientConfigurationBuilder configurationBuilder)
         where TStateCodeGenerator : class, IStateCodeGenerator
     {
         configurationBuilder.ServiceCollection.AddSingleton<IStateCodeGenerator, TStateCodeGenerator>();

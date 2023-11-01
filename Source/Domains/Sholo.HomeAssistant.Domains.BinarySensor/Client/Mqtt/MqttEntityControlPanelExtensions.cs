@@ -10,11 +10,11 @@ namespace Sholo.HomeAssistant.Client.Mqtt;
 public static class MqttEntityControlPanelExtensions
 {
     public static IEntityBindingManager<IBinarySensorMqttEntityConfiguration, IBinarySensor, IBinarySensorEntityDefinition> BinarySensors(this IMqttEntityControlPanel controlPanel)
-        => controlPanel.StatefulEntitiesOfType<IBinarySensorMqttEntityConfiguration, IBinarySensor, IBinarySensorEntityDefinition>(DomainRegistry.Instance.BinarySensor());
+        => controlPanel.StatefulEntitiesOfType<BinarySensorDomain, IBinarySensorMqttEntityConfiguration, IBinarySensor, IBinarySensorEntityDefinition>();
 
     public static IMqttEntityControlPanel AddBinarySensor(this IMqttEntityControlPanel controlPanel, IBinarySensorMqttEntityConfiguration configuration)
     {
-        controlPanel.AddStatefulEntity<IBinarySensorMqttEntityConfiguration, IBinarySensor, IBinarySensorEntityDefinition>(DomainRegistry.Instance.BinarySensor(), configuration);
+        controlPanel.AddStatefulEntity<BinarySensorDomain, IBinarySensorMqttEntityConfiguration, IBinarySensor, IBinarySensorEntityDefinition>(configuration);
         return controlPanel;
     }
 }

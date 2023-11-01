@@ -1,5 +1,6 @@
 namespace Sholo.HomeAssistant.Domains;
 
+[PublicAPI]
 public class CalendarDomain : BaseDomain
 {
     public override string Name { get; } = "calendar";

@@ -74,7 +74,7 @@ public class StateProvider : IStateProvider
             }
         }
 
-        return typeof(IEventMessage<StateChangePayload>);
+        return typeof(EventMessage<StateChangePayload>);
     }
 
     private string GetDomainFromEntity(string entityId) => entityId.Split(new[] { '.' }, 2).First();

@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.Mqtt\Sholo.HomeAssistant.Client.Mqtt.csproj" />
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Domains.Builtin\Sholo.HomeAssistant.Domains.Builtin.csproj" />
+  </ItemGroup>
+
 </Project>

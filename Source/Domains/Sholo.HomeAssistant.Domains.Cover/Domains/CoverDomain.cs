@@ -1,5 +1,6 @@
 namespace Sholo.HomeAssistant.Domains;
 
+[PublicAPI]
 public class CoverDomain : BaseDomain
 {
     public override string Name { get; } = "cover";

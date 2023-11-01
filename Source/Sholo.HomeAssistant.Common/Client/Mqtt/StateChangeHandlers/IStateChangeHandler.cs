@@ -6,6 +6,7 @@ using Sholo.HomeAssistant.Client.Mqtt.MessageBus;
 
 namespace Sholo.HomeAssistant.Client.Mqtt.StateChangeHandlers;
 
+[PublicAPI]
 public interface IStateChangeHandler<in TEntity, in TEntityDefinition>
     where TEntity : IEntity
     where TEntityDefinition : IEntityDefinition

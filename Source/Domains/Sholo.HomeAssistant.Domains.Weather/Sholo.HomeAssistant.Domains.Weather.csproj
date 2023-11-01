@@ -1,9 +1,1 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <Folder Include="Client\Mqtt\EntityConfigurationBuilders\" />
-    <Folder Include="Client\Mqtt\EntityConfigurations\" />
-    <Folder Include="Client\Mqtt\EntityDefinitionBuilders\" />
-    <Folder Include="Client\Mqtt\EntityDefinitions\" />
-    <Folder Include="Domains\" />
-  </ItemGroup>
-</Project>
+<Project Sdk="Microsoft.NET.Sdk" />

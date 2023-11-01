@@ -22,7 +22,7 @@ public abstract class BaseStatefulEntityDefinitionBuilder<TBuilder, TResultInter
         return (TBuilder)this;
     }
 
-    public TBuilder WithJsonAttributes(string jsonAttributesTopic, string jsonAttributesTemplate)
+    public TBuilder WithJsonAttributes(string jsonAttributesTopic, string? jsonAttributesTemplate)
     {
         Target.JsonAttributesTopic = jsonAttributesTopic;
         Target.JsonAttributesTemplate = jsonAttributesTemplate;

@@ -10,11 +10,11 @@ namespace Sholo.HomeAssistant.Client.Mqtt;
 public static class MqttEntityControlPanelExtensions
 {
     public static IEntityBindingManager<ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition> Covers(this IMqttEntityControlPanel controlPanel)
-        => controlPanel.StatefulEntitiesOfType<ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition>(DomainRegistry.Instance.Cover());
+        => controlPanel.StatefulEntitiesOfType<CoverDomain, ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition>();
 
     public static IMqttEntityControlPanel AddCover(this IMqttEntityControlPanel controlPanel, ICoverMqttEntityConfiguration configuration)
     {
-        controlPanel.AddStatefulEntity<ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition>(DomainRegistry.Instance.Cover(), configuration);
+        controlPanel.AddStatefulEntity<CoverDomain, ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition>(configuration);
         return controlPanel;
     }
 }

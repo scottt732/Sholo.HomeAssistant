@@ -2,6 +2,5 @@
   <ItemGroup>
     <Folder Include="Client\Http\EntityStateDeserializers\" />
     <Folder Include="Client\Http\EntityStates\" />
-    <Folder Include="Domains\" />
   </ItemGroup>
 </Project>

@@ -16,4 +16,9 @@
     <ProjectReference Include="..\..\Sholo.HomeAssistant.Common\Sholo.HomeAssistant.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup Label="Files">
+    <None Remove="..\..\Images\Icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\..\Images\Icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
 </Project>

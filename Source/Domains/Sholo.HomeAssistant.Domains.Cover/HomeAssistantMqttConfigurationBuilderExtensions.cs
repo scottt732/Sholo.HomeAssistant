@@ -3,17 +3,18 @@ using Sholo.HomeAssistant.Client.Mqtt;
 using Sholo.HomeAssistant.Client.Mqtt.EntityConfigurationBuilders;
 using Sholo.HomeAssistant.Client.Mqtt.EntityConfigurations;
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
+using Sholo.HomeAssistant.Domains;
 
 namespace Sholo.HomeAssistant;
 
 [PublicAPI]
 public static class HomeAssistantMqttConfigurationBuilderExtensions
 {
-    public static IHomeAssistantMqttConfigurationBuilder AddCover(
-        this IHomeAssistantMqttConfigurationBuilder configurationBuilder,
+    public static IHomeAssistantMqttClientConfigurationBuilder AddCover(
+        this IHomeAssistantMqttClientConfigurationBuilder configurationBuilder,
         Func<ICoverMqttEntityConfigurationBuilder, ICoverMqttEntityConfigurationBuilder> configurator)
     {
-        configurationBuilder.TryRegisterStatefulEntityBindingManager<ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition>();
+        configurationBuilder.AddStatefulDomain<CoverDomain, ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition>();
 
         ICoverMqttEntityConfigurationBuilder builder = new CoverMqttEntityConfigurationBuilder();
         builder = configurator(builder);
@@ -27,11 +28,11 @@ public static class HomeAssistantMqttConfigurationBuilderExtensions
         return configurationBuilder;
     }
 
-    public static IHomeAssistantMqttConfigurationBuilder AddCover(
-        this IHomeAssistantMqttConfigurationBuilder configurationBuilder,
+    public static IHomeAssistantMqttClientConfigurationBuilder AddCover(
+        this IHomeAssistantMqttClientConfigurationBuilder configurationBuilder,
         ICoverMqttEntityConfiguration mqttEntityConfiguration)
     {
-        configurationBuilder.TryRegisterStatefulEntityBindingManager<ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition>();
+        configurationBuilder.AddStatefulDomain<CoverDomain, ICoverMqttEntityConfiguration, ICover, ICoverEntityDefinition>();
 
         configurationBuilder.ServiceCollection.AddSingleton(mqttEntityConfiguration);
         return configurationBuilder;

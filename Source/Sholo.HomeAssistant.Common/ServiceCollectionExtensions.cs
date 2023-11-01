@@ -10,7 +10,7 @@ namespace Sholo.HomeAssistant;
 [PublicAPI]
 public static class ServiceCollectionExtensions
 {
-    public static IHomeAssistantServiceCollection AddHomeAssistant(this IServiceCollection services, IConfiguration configuration)
+    public static IHomeAssistantConfigurationBuilder AddHomeAssistant(this IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddSingleton<IDomainRegistry, DomainRegistry>();
         services.TryAddSingleton<ILoggerFactory, NullLoggerFactory>();
@@ -18,6 +18,6 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IValidator, Validator>();
 
-        return new HomeAssistantServiceCollection(services, configuration);
+        return new HomeAssistantConfigurationBuilder(services, configuration);
     }
 }

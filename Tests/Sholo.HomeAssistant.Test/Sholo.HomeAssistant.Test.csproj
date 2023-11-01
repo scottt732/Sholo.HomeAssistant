@@ -11,41 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.AlarmControlPanel\Sholo.HomeAssistant.Domains.AlarmControlPanel.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.BinarySensor\Sholo.HomeAssistant.Domains.BinarySensor.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Button\Sholo.HomeAssistant.Domains.Button.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Calendar\Sholo.HomeAssistant.Domains.Calendar.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Camera\Sholo.HomeAssistant.Domains.Camera.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Climate\Sholo.HomeAssistant.Domains.Climate.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Cover\Sholo.HomeAssistant.Domains.Cover.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.DeviceTracker\Sholo.HomeAssistant.Domains.DeviceTracker.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.DeviceTrigger\Sholo.HomeAssistant.Domains.DeviceTrigger.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Display\Sholo.HomeAssistant.Domains.Display.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Event\Sholo.HomeAssistant.Domains.Event.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Fan\Sholo.HomeAssistant.Domains.Fan.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Group\Sholo.HomeAssistant.Domains.Group.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Humidifier\Sholo.HomeAssistant.Domains.Humidifier.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Image\Sholo.HomeAssistant.Domains.Image.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.InputBoolean\Sholo.HomeAssistant.Domains.InputBoolean.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.LawnMower\Sholo.HomeAssistant.Domains.LawnMower.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Light\Sholo.HomeAssistant.Domains.Light.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Lock\Sholo.HomeAssistant.Domains.Lock.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.MediaPlayer\Sholo.HomeAssistant.Domains.MediaPlayer.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Number\Sholo.HomeAssistant.Domains.Number.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Person\Sholo.HomeAssistant.Domains.Person.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Scene\Sholo.HomeAssistant.Domains.Scene.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Script\Sholo.HomeAssistant.Domains.Script.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Sensor\Sholo.HomeAssistant.Domains.Sensor.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Siren\Sholo.HomeAssistant.Domains.Siren.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Sun\Sholo.HomeAssistant.Domains.Sun.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Switch\Sholo.HomeAssistant.Domains.Switch.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.TagScanner\Sholo.HomeAssistant.Domains.TagScanner.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Text\Sholo.HomeAssistant.Domains.Text.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Update\Sholo.HomeAssistant.Domains.Update.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Vacuum\Sholo.HomeAssistant.Domains.Vacuum.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.WaterHeater\Sholo.HomeAssistant.Domains.WaterHeater.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Weather\Sholo.HomeAssistant.Domains.Weather.csproj" />
-    <ProjectReference Include="..\..\Source\Domains\Sholo.HomeAssistant.Domains.Zone\Sholo.HomeAssistant.Domains.Zone.csproj" />
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Domains.BuiltIn\Sholo.HomeAssistant.Domains.BuiltIn.csproj" />
     <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.Rest\Sholo.HomeAssistant.Client.Rest.csproj" />
     <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.Supervisor\Sholo.HomeAssistant.Client.Supervisor.csproj" />
     <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.WebSockets\Sholo.HomeAssistant.Client.WebSockets.csproj" />

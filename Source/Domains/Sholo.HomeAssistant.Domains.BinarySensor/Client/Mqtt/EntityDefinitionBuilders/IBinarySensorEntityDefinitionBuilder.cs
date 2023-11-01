@@ -1,5 +1,5 @@
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
-using Sholo.HomeAssistant.DeviceClasses;
+using Sholo.HomeAssistant.Domains;
 
 namespace Sholo.HomeAssistant.Client.Mqtt.EntityDefinitionBuilders;
 

@@ -1,6 +1,7 @@
 namespace Sholo.HomeAssistant.Domains;
 
-public sealed class BinarySensorDomain : BaseDomain
+[PublicAPI]
+public class BinarySensorDomain : BaseDomain
 {
     public override string Name { get; } = "binary_sensor";
     public override string ManifestJsonPath { get; } = "homeassistant/components/binary_sensor/manifest.json";

@@ -10,11 +10,11 @@ namespace Sholo.HomeAssistant.Client.Mqtt;
 public static class MqttEntityControlPanelExtensions
 {
     public static IEntityBindingManager<IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition> AlarmControlPanels(this IMqttEntityControlPanel controlPanel)
-        => controlPanel.StatefulEntitiesOfType<IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition>(DomainRegistry.Instance.AlarmControlPanel());
+        => controlPanel.StatefulEntitiesOfType<AlarmControlPanelDomain, IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition>();
 
     public static IMqttEntityControlPanel AddAlarmControlPanel(this IMqttEntityControlPanel controlPanel, IAlarmControlPanelMqttEntityConfiguration configuration)
     {
-        controlPanel.AddStatefulEntity<IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition>(DomainRegistry.Instance.AlarmControlPanel(), configuration);
+        controlPanel.AddStatefulEntity<AlarmControlPanelDomain, IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition>(configuration);
         return controlPanel;
     }
 }

@@ -2,6 +2,7 @@
 
   <PropertyGroup Label="Build">
     <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>Sholo.HomeAssistant.Client</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">

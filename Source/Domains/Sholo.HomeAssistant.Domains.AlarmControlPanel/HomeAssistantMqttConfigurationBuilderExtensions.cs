@@ -3,17 +3,18 @@ using Sholo.HomeAssistant.Client.Mqtt;
 using Sholo.HomeAssistant.Client.Mqtt.EntityConfigurationBuilders;
 using Sholo.HomeAssistant.Client.Mqtt.EntityConfigurations;
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
+using Sholo.HomeAssistant.Domains;
 
 namespace Sholo.HomeAssistant;
 
 [PublicAPI]
 public static class HomeAssistantMqttConfigurationBuilderExtensions
 {
-    public static IHomeAssistantDomainsConfigurationBuilder AddAlarmControlPanel(
-        this IHomeAssistantDomainsConfigurationBuilder configurationBuilder,
+    public static IHomeAssistantMqttClientConfigurationBuilder AddAlarmControlPanel(
+        this IHomeAssistantMqttClientConfigurationBuilder configurationBuilder,
         Func<IAlarmControlPanelMqttEntityConfigurationBuilder, IAlarmControlPanelMqttEntityConfigurationBuilder> configurator)
     {
-        configurationBuilder.TryRegisterStatefulEntityBindingManager<IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition>();
+        configurationBuilder.AddStatefulDomain<AlarmControlPanelDomain, IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition>();
 
         IAlarmControlPanelMqttEntityConfigurationBuilder builder = new AlarmControlPanelMqttEntityConfigurationBuilder();
         builder = configurator(builder);
@@ -27,11 +28,11 @@ public static class HomeAssistantMqttConfigurationBuilderExtensions
         return configurationBuilder;
     }
 
-    public static IHomeAssistantMqttConfigurationBuilder AddAlarmControlPanel(
-        this IHomeAssistantMqttConfigurationBuilder configurationBuilder,
+    public static IHomeAssistantMqttClientConfigurationBuilder AddAlarmControlPanel(
+        this IHomeAssistantMqttClientConfigurationBuilder configurationBuilder,
         IAlarmControlPanelMqttEntityConfiguration mqttEntityConfiguration)
     {
-        configurationBuilder.TryRegisterStatefulEntityBindingManager<IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition>();
+        configurationBuilder.AddStatefulDomain<AlarmControlPanelDomain, IAlarmControlPanelMqttEntityConfiguration, IAlarmControlPanel, IAlarmControlPanelEntityDefinition>();
 
         configurationBuilder.ServiceCollection.AddSingleton(mqttEntityConfiguration);
         return configurationBuilder;

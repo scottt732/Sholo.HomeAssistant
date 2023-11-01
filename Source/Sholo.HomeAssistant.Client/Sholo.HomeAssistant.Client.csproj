@@ -2,7 +2,11 @@
 
   <PropertyGroup Label="Build">
     <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Sholo.HomeAssistant</RootNamespace>
   </PropertyGroup>
+
 
   <PropertyGroup Label="Package">
     <Product>Sholo.HomeAssistant.Client.Domains</Product>
@@ -19,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sholo.HomeAssistant.Client.Http.Rest\Sholo.HomeAssistant.Client.Http.Rest.csproj" />
+    <ProjectReference Include="..\Sholo.HomeAssistant.Client.Http.WebSockets\Sholo.HomeAssistant.Client.Http.WebSockets.csproj" />
     <ProjectReference Include="..\Sholo.HomeAssistant.Client.Mqtt\Sholo.HomeAssistant.Client.Mqtt.csproj" />
-    <ProjectReference Include="..\Sholo.HomeAssistant.Client.Rest\Sholo.HomeAssistant.Client.Rest.csproj" />
     <ProjectReference Include="..\Sholo.HomeAssistant.Client.Supervisor\Sholo.HomeAssistant.Client.Supervisor.csproj" />
-    <ProjectReference Include="..\Sholo.HomeAssistant.Client.WebSockets\Sholo.HomeAssistant.Client.WebSockets.csproj" />
     <ProjectReference Include="..\Sholo.HomeAssistant.Domains.Builtin\Sholo.HomeAssistant.Domains.Builtin.csproj" />
   </ItemGroup>
 

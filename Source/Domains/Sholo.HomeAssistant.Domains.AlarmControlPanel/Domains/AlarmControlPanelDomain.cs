@@ -1,6 +1,7 @@
 namespace Sholo.HomeAssistant.Domains;
 
-public sealed class AlarmControlPanelDomain : BaseDomain
+[PublicAPI]
+public class AlarmControlPanelDomain : BaseDomain
 {
     public override string Name { get; } = "alarm_control_panel";
     public override string ManifestJsonPath { get; } = "homeassistant/components/alarm_control_panel/manifest.json";

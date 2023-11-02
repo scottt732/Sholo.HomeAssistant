@@ -23,14 +23,36 @@ public class MqttEntityControlPanel : IMqttEntityControlPanelHost, IConfigureMqt
     private IList<IEntityBindingManager> EntityBindingManagers => _entityBindingManagers;
 
     private readonly ObservableCollection<IEntityBindingManager> _entityBindingManagers = new();
+    private IMqttMessageBus _mqttMessageBus;
 
     private IDisposable CollectionChangeSubscription { get; }
     private IMqttApplicationProvider MqttApplicationProvider { get; set; }
-    private IMqttMessageBus MqttMessageBus { get; set; }
+
+    private IMqttMessageBus MqttMessageBus
+    {
+        get => _mqttMessageBus;
+        set
+        {
+            var initializing = _mqttMessageBus == null && value != null;
+
+            _mqttMessageBus = value;
+
+            if (initializing)
+            {
+                foreach (var entityBindingManager in EntityBindingManagers)
+                {
+                    foreach (var mqttEntityBinding in entityBindingManager.UntypedEntityConfigurations.Where(b => !b.IsBound))
+                    {
+                        mqttEntityBinding.Bind(_mqttMessageBus, true);
+                    }
+                }
+            }
+        }
+    }
 
     private Dictionary<string, IMqttMiddleware> MiddlewareByDomain { get; } = new();
 
-    public MqttEntityControlPanel()
+    public MqttEntityControlPanel(IEnumerable<IEntityBindingManager> entityBindingManagers)
     {
         CollectionChangeSubscription = ObserveCollectionChanges();
 
@@ -39,16 +61,16 @@ public class MqttEntityControlPanel : IMqttEntityControlPanelHost, IConfigureMqt
         TODO: May be able to use IMqttEntityBindingManagerConfiguration and extension methods to instantiate
 
         Had constructor param IEnumerable<IEntityBindingManager> entityBindingManagers = null but need TMqttEntityConfiguration, TEntity, TEntityDefinition
+        */
         if (entityBindingManagers != null)
         {
             foreach (var entityBindingManager in entityBindingManagers)
             {
-                var middleware = new EntityCommandMiddleware<TMqttEntityConfiguration, TEntity, TEntityDefinition>(entityBindingManager);
-                entityBindingManager.RebuildRequired += RebuildRequired;
-                _entityBindingManagers.Add(entityBindingManager);
+                // var middleware = new EntityCommandMiddleware<TMqttEntityConfiguration, TEntity, TEntityDefinition>(entityBindingManager);
+                // entityBindingManager.RebuildRequired += RebuildRequired;
+                // _entityBindingManagers.Add(entityBindingManager);
             }
         }
-        */
     }
 
     public void BindAll(IMqttApplicationProvider mqttApplicationProvider, IMqttMessageBus mqttMessageBus, bool sendDiscovery = true)

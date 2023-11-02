@@ -15,6 +15,8 @@ public interface IEntityBindingManager : IDisposable
 
     event EventHandler RebuildRequired;
 
+    IEnumerable<IMqttEntityBinding> UntypedEntityConfigurations { get; }
+
     void BindAll(IMqttMessageBus mqttMessageBus, bool sendDiscovery);
     void SendDiscoveryAll();
     void DeleteAll();

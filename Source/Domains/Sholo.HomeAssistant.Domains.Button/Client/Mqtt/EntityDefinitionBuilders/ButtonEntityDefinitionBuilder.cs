@@ -7,43 +7,47 @@ public class ButtonEntityDefinitionBuilder
     : BaseStatefulEntityDefinitionBuilder<ButtonEntityDefinitionBuilder, IButtonEntityDefinition, ButtonEntityDefinition>,
         IButtonEntityDefinitionBuilder<ButtonEntityDefinitionBuilder>
 {
-    public ButtonEntityDefinitionBuilder CommandTemplate(string? commandTemplate)
+    public ButtonEntityDefinitionBuilder WithCommandTemplate(string? commandTemplate)
     {
         Target.CommandTemplate = commandTemplate;
         return this;
     }
 
-    public ButtonEntityDefinitionBuilder CommandTopic(string? commandTopic)
+    public ButtonEntityDefinitionBuilder WithCommandTopic(string? commandTopic)
     {
-        Target.CommandTopic = commandTopic;
+        if (commandTopic != null)
+        {
+            Target.CommandTopic = commandTopic;
+        }
+
         return this;
     }
 
-    public ButtonEntityDefinitionBuilder DeviceClass(ButtonDeviceClass? deviceClass)
+    public ButtonEntityDefinitionBuilder WithDeviceClass(ButtonDeviceClass? deviceClass)
     {
         Target.DeviceClass = deviceClass;
         return this;
     }
 
-    public ButtonEntityDefinitionBuilder EnabledByDefault(bool? enabledByDefault)
+    public ButtonEntityDefinitionBuilder WithEnabledByDefault(bool? enabledByDefault)
     {
         Target.EnabledByDefault = enabledByDefault;
         return this;
     }
 
-    public ButtonEntityDefinitionBuilder Encoding(string? encoding)
+    public ButtonEntityDefinitionBuilder WithEncoding(string? encoding)
     {
         Target.Encoding = encoding;
         return this;
     }
 
-    public ButtonEntityDefinitionBuilder EntityCategory(string? entityCategory)
+    public ButtonEntityDefinitionBuilder WithEntityCategory(string? entityCategory)
     {
         Target.EntityCategory = entityCategory;
         return this;
     }
 
-    public ButtonEntityDefinitionBuilder Icon(string? icon)
+    public ButtonEntityDefinitionBuilder WithIcon(string? icon)
     {
         Target.Icon = icon;
         return this;

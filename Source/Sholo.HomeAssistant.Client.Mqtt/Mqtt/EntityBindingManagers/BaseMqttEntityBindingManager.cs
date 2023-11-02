@@ -24,6 +24,7 @@ public abstract class BaseMqttEntityBindingManager<TMqttEntityConfiguration, TEn
 {
     public IDomain Domain { get; }
     public IList<IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition>> EntityConfigurations => _entityConfigurations;
+    public IEnumerable<IMqttEntityBinding> UntypedEntityConfigurations => EntityConfigurations.Cast<IMqttEntityBinding>().ToList();
 
     public event EventHandler RebuildRequired;
 
@@ -60,7 +61,10 @@ public abstract class BaseMqttEntityBindingManager<TMqttEntityConfiguration, TEn
     {
         MqttMessageBus = mqttMessageBus ?? throw new ArgumentNullException(nameof(mqttMessageBus));
 
-        foreach (var entityConfiguration in _entityConfigurations) { entityConfiguration.Bind(mqttMessageBus, sendDiscovery); }
+        foreach (var entityConfiguration in _entityConfigurations.Where(x => !x.IsBound))
+        {
+            entityConfiguration.Bind(mqttMessageBus, sendDiscovery);
+        }
     }
 
     public void SendDiscoveryAll()

@@ -4,7 +4,7 @@ namespace Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
 public class ButtonEntityDefinition : BaseStatefulEntityDefinition, IButtonEntityDefinition
 {
     public string? CommandTemplate { get; internal set; } = null!;
-    public string? CommandTopic { get; internal set; } = null!;
+    public string CommandTopic { get; internal set; } = null!;
     public ButtonDeviceClass? DeviceClass { get; internal set; }
     public bool? EnabledByDefault { get; internal set; } = true;
     public string? Encoding { get; internal set; } = "utf-8";

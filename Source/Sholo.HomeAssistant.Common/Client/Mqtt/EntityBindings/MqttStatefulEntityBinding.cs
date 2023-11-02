@@ -24,6 +24,11 @@ public class MqttStatefulEntityBinding<TMqttEntityConfiguration, TEntity, TEntit
 
     public override void Bind(IMqttMessageBus messageBus, bool sendDiscovery)
     {
+        if (MessageBus != null || IsBound)
+        {
+            throw new InvalidOperationException($"{nameof(Bind)} can only be called once");
+        }
+
         foreach (var stateChangeHandler in EntityConfiguration.StateChangeHandlers)
         {
             SubscriptionsByDiscoveryTopic.Add(

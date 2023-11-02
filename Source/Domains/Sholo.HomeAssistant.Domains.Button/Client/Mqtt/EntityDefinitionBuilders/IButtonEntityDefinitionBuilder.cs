@@ -6,12 +6,12 @@ namespace Sholo.HomeAssistant.Client.Mqtt.EntityDefinitionBuilders;
 public interface IButtonEntityDefinitionBuilder<out TSelf> : IStatefulEntityDefinitionBuilder<TSelf, IButtonEntityDefinition>
     where TSelf : IButtonEntityDefinitionBuilder<TSelf>
 {
-    TSelf CommandTemplate(string? commandTemplate);
-    TSelf CommandTopic(string? commandTopic);
-    TSelf DeviceClass(ButtonDeviceClass? deviceClass);
-    TSelf EnabledByDefault(bool? enabledByDefault);
-    TSelf Encoding(string? encoding);
-    TSelf EntityCategory(string? entityCategory);
-    TSelf Icon(string? icon);
+    TSelf WithCommandTemplate(string? commandTemplate);
+    TSelf WithCommandTopic(string? commandTopic);
+    TSelf WithDeviceClass(ButtonDeviceClass? deviceClass);
+    TSelf WithEnabledByDefault(bool? enabledByDefault);
+    TSelf WithEncoding(string? encoding);
+    TSelf WithEntityCategory(string? entityCategory);
+    TSelf WithIcon(string? icon);
     TSelf WithPayloadPress(string? payloadPress);
 }

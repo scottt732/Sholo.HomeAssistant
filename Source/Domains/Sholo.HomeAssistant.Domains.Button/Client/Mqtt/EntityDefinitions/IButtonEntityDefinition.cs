@@ -4,14 +4,14 @@ namespace Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
 public interface IButtonEntityDefinition : IStatefulEntityDefinition
 {
     /// <summary>
-    /// The template used for the command payload. Available variables: action and code.
+    /// The template used for the command payload.
     /// </summary>
     string? CommandTemplate { get; }
 
     /// <summary>
-    /// The MQTT topic to publish commands to change the alarm state.
+    /// The MQTT topic to publish commands to trigger the button
     /// </summary>
-    string? CommandTopic { get; }
+    string CommandTopic { get; }
 
     ButtonDeviceClass? DeviceClass { get; }
 

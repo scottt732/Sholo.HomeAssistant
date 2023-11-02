@@ -12,6 +12,7 @@ public class MqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinit
     where TEntity : IEntity
     where TEntityDefinition : IEntityDefinition
 {
+    public bool IsBound { get; private set; }
     public TMqttEntityConfiguration EntityConfiguration { get; }
 
     protected IMqttMessageBus? MessageBus { get; private set; }
@@ -23,7 +24,7 @@ public class MqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinit
 
     public virtual void Bind(IMqttMessageBus messageBus, bool sendDiscovery)
     {
-        if (MessageBus != null)
+        if (MessageBus != null || IsBound)
         {
             throw new InvalidOperationException($"{nameof(Bind)} can only be called once");
         }
@@ -34,6 +35,8 @@ public class MqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinit
         {
             MessageBus.PublishMessage(EntityConfiguration.DiscoveryMessage);
         }
+
+        IsBound = true;
     }
 
     public void SendDiscovery()

@@ -21,4 +21,9 @@ public interface IEntityDefinition : IDefinition
     /// Assistant will raise an exception.
     /// </summary>
     string UniqueId { get; }
+
+    /// <summary>
+    /// An optional object id (used by HA to construct an entity_id as opposed to relying on the name)
+    /// </summary>
+    string? ObjectId { get; }
 }

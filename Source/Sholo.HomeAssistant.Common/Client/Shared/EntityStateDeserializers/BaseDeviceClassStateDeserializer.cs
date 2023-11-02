@@ -6,7 +6,7 @@ namespace Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 
 [PublicAPI]
 public abstract class BaseDeviceClassStateDeserializer<TState> : BaseStateDeserializer<TState>
-    where TState : IEntityState
+    where TState : class, IEntityState
 {
     public abstract string TargetDeviceClass { get; }
 

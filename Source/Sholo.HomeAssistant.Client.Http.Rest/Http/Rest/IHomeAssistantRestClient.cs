@@ -35,10 +35,12 @@ public interface IHomeAssistantRestClient
     Task<CameraThumbnailResult> GetCameraThumbnailAsync(string entityId, CancellationToken cancellationToken = default);
 
     Task<CreateOrUpdateStateResult<TState, TStateAttributes>> CreateOrUpdateStateAsync<TState, TStateAttributes>(TState state, CancellationToken cancellationToken = default)
-        where TState : IEntityState<TStateAttributes>;
+        where TState : class, IEntityState<TStateAttributes>
+        where TStateAttributes : class;
 
     Task<CreateOrUpdateStateResult<TState, TStateValue, TStateAttributes>> CreateOrUpdateStateAsync<TState, TStateValue, TStateAttributes>(TState state, CancellationToken cancellationToken = default)
-        where TState : IEntityState<TStateValue, TStateAttributes>;
+        where TState : class, IEntityState<TStateValue, TStateAttributes>
+        where TStateAttributes : class;
 
     Task<MessageResult> FireEventAsync(string eventType, CancellationToken cancellationToken = default);
     Task<MessageResult> FireEventAsync(string eventType, IDictionary<string, object> eventData, CancellationToken cancellationToken = default);

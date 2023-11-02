@@ -30,6 +30,12 @@ public abstract class BaseEntityDefinitionBuilder<TBuilder, TResultInterface, TR
         return (TBuilder)this;
     }
 
+    public TBuilder WithObjectId(string objectId)
+    {
+        Target.ObjectId = objectId;
+        return (TBuilder)this;
+    }
+
     public TBuilder WithUniqueId(string uniqueId)
     {
         Target.UniqueId = uniqueId;

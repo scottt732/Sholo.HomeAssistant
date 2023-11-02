@@ -7,4 +7,5 @@ public abstract class BaseEntityDefinition : BaseDefinition, IEntityDefinition
     public IDevice Device { get; internal set; } = null!;
     public string Name { get; internal set; } = null!;
     public string UniqueId { get; internal set; } = null!;
+    public string? ObjectId { get; internal set; }
 }

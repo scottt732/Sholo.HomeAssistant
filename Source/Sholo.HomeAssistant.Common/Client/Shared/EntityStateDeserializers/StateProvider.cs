@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sholo.HomeAssistant.Client.Shared.EntityStates;
 using Sholo.HomeAssistant.Client.WebSockets.Events;
 using Sholo.HomeAssistant.Client.WebSockets.Events.StateChanged;
 using Sholo.HomeAssistant.StateDeserializers;
@@ -52,7 +51,7 @@ public class StateProvider : IStateProvider
             }
         }
 
-        return typeof(IEntityState);
+        return typeof(EntityState);
     }
 
     public Type GetStateChangeEventMessageType(string entityId, IDictionary<string, object> attributes)

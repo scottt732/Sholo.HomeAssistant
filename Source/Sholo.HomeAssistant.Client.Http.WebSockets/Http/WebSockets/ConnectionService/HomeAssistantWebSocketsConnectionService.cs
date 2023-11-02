@@ -391,12 +391,12 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
                 }
                 else if (messageType == HomeAssistantWsMessageType.Event)
                 {
+                    /*
                     if (!id.HasValue)
                     {
                         throw new InvalidOperationException();
                     }
 
-                    /*
                     EventMessage eventMessage;
                     if (SubscriptionsById.TryGetValue(id.Value, out var subscription))
                     {

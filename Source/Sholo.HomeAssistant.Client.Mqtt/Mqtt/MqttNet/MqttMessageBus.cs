@@ -26,7 +26,11 @@ public class MqttMessageBus : IMqttMessageBus
 
     private Subject<MqttApplicationMessage> MessageBus { get; } = new();
 
-    public void PublishMessage(IApplicationMessage message) => MessageBus.OnNext(message.ToMqttNetApplicationMessage());
+    public void PublishMessage(IApplicationMessage message)
+    {
+        var mqttApplicationMessage = message.ToMqttNetApplicationMessage();
+        MessageBus.OnNext(mqttApplicationMessage);
+    }
 
     public IDisposable Bind() => MessageBus
         .ObserveOn(Scheduler.CurrentThread)

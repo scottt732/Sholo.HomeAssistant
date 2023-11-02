@@ -8,11 +8,11 @@ using Sholo.HomeAssistant.StateDeserializers;
 namespace Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 
 public abstract class BaseStateDeserializer<TState> : IStateDeserializer
-    where TState : IEntityState
+    where TState : class, IEntityState
 {
     public abstract string TargetDomain { get; }
     public abstract bool CanDeserialize(IDictionary<string, object> attributes);
 
-    public Type TargetStateChangeEventMessageType { get; } = typeof(IEventMessage<StateChangePayload<TState>>);
+    public Type TargetStateChangeEventMessageType { get; } = typeof(EventMessage<StateChangePayload<TState>>);
     public Type EntityStateType { get; } = typeof(TState);
 }

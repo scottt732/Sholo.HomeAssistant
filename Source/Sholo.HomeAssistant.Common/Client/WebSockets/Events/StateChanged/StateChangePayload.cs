@@ -12,7 +12,7 @@ public class StateChangePayload
 
 [PublicAPI]
 public class StateChangePayload<TState>
-    where TState : IEntityState
+    where TState : class, IEntityState
 {
     public string EntityId { get; set; } = null!;
     public TState? OldState { get; set; }

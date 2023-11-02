@@ -17,12 +17,14 @@ public interface IEntityState
 
 [PublicAPI]
 public interface IEntityState<out TStateAttributes> : IEntityState
+    where TStateAttributes : class
 {
     TStateAttributes Attributes { get; }
 }
 
 [PublicAPI]
 public interface IEntityState<out TStateValue, out TStateAttributes> : IEntityState<TStateAttributes>
+    where TStateAttributes : class
 {
     TStateValue State { get; }
 }

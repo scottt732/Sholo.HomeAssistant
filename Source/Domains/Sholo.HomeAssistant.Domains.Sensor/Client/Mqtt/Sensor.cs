@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace Sholo.HomeAssistant.Client.Mqtt;
 
+[PublicAPI]
 public class Sensor : ISensor, IDisposable
 {
     public float Value

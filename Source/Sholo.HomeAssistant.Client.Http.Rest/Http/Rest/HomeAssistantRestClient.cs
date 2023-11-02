@@ -172,7 +172,8 @@ public class HomeAssistantRestClient : IHomeAssistantRestClient
         TState state,
         CancellationToken cancellationToken = default
     )
-        where TState : IEntityState<TStateValue, TStateAttributes>
+        where TState : class, IEntityState<TStateValue, TStateAttributes>
+        where TStateAttributes : class
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentException.ThrowIfNullOrEmpty(state.EntityId);
@@ -204,7 +205,8 @@ public class HomeAssistantRestClient : IHomeAssistantRestClient
         TState state,
         CancellationToken cancellationToken = default
     )
-        where TState : IEntityState<TStateAttributes>
+        where TState : class, IEntityState<TStateAttributes>
+        where TStateAttributes : class
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentException.ThrowIfNullOrEmpty(state.EntityId);

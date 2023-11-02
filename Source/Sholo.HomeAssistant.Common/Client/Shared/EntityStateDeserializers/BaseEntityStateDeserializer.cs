@@ -7,7 +7,7 @@ namespace Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 
 [PublicAPI]
 public abstract class BaseEntityStateDeserializer<TState> : IEntityStateDeserializer
-    where TState : IEntityState
+    where TState : class, IEntityState
 {
     public abstract string TargetEntityId { get; }
     protected abstract IEventMessage<StateChangePayload<TState>> CreateTypedTarget();

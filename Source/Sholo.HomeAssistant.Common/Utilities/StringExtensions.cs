@@ -15,16 +15,20 @@ public static class StringExtensions
         {
             if (i == 0)
             {
-                sb.Append(char.ToLower(str[0], CultureInfo.CurrentCulture));
-            }
-            else if (char.IsUpper(str[i]))
-            {
-                sb.Append('_');
                 sb.Append(char.ToLower(str[i], CultureInfo.CurrentCulture));
             }
             else if (str[i] == ' ')
             {
                 sb.Append('_');
+            }
+            else if (char.IsUpper(str[i]))
+            {
+                if (sb[^1] != '_')
+                {
+                    sb.Append('_');
+                }
+
+                sb.Append(char.ToLower(str[i], CultureInfo.CurrentCulture));
             }
             else if (char.IsLetterOrDigit(str[i]))
             {

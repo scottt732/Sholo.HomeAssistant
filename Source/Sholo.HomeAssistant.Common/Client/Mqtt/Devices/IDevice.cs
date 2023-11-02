@@ -36,4 +36,16 @@ public interface IDevice
     /// Gets the firmware version of the device.
     /// </summary>
     string SwVersion { get; }
+
+    /// <summary>
+    /// The suggested name for the area where the device is located.
+    /// </summary>
+    string? SuggestedArea { get; }
+
+    /// <summary>
+    /// Identifier of a device that routes messages between this device and Home Assistant.
+    /// Examples of such devices are hubs, or parent devices of a sub-device. This is used
+    /// to show device topology in Home Assistant.
+    /// </summary>
+    string? ViaDevice { get; }
 }

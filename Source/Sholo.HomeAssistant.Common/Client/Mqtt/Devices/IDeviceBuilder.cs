@@ -48,6 +48,22 @@ public interface IDeviceBuilder
     IDeviceBuilder WithSwVersion(string swVersion);
 
     /// <summary>
+    /// (Optional) Identifier of a device that routes messages between this device and
+    /// Home Assistant. Examples of such devices are hubs, or parent devices of a
+    /// sub-device. This is used to show device topology in Home Assistant.
+    /// </summary>
+    /// <param name="viaDeviceId">The identifier of the parent device</param>
+    /// <returns>The <see cref="IDeviceBuilder" /></returns>
+    IDeviceBuilder WithViaDevice(string? viaDeviceId);
+
+    /// <summary>
+    /// The suggested name for the area where the device is located.
+    /// </summary>
+    /// <param name="areaName">The suggested name of the area where the device is located</param>
+    /// <returns>The <see cref="IDeviceBuilder" /></returns>
+    IDeviceBuilder WithSuggestedArea(string? areaName);
+
+    /// <summary>
     /// Builds the <see cref="IDevice" /> using the configured parameters
     /// </summary>
     /// <returns>An <see cref="IDevice" /></returns>

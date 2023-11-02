@@ -26,12 +26,13 @@ public abstract class BaseStateChangeHandler<TEntity, TEntityDefinition> : IStat
     )
     {
         var stateChangeDetector = GetStateChangeDetector(entity);
-        var stateMessagePayload = GetStateMessagePayload(entityDefinition, entity);
 
         return stateChangeDetector
             .Subscribe(
                 _ =>
                 {
+                    var stateMessagePayload = GetStateMessagePayload(entityDefinition, entity);
+
                     var messageBuilder = new ApplicationMessageBuilder()
                         .WithTopic(entityDefinition.StateTopic)
                         .WithPayload(stateMessagePayload)

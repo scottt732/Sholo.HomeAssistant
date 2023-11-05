@@ -7,7 +7,6 @@
     <RootNamespace>Sholo.HomeAssistant</RootNamespace>
   </PropertyGroup>
 
-
   <PropertyGroup Label="Package">
     <Product>Sholo.HomeAssistant.Client.Domains</Product>
     <Description>WebSocket and REST clients for Home Assistant</Description>

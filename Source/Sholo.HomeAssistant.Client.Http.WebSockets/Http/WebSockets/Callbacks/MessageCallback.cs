@@ -21,7 +21,7 @@ internal sealed class MessageCallback<TMessage, TMessageResult> : BaseMessageCal
     )
         : base(
             command.Id,
-            command.MessageType
+            command.MessageType ?? throw new ArgumentException("The command does not define a message type", nameof(command))
         )
     {
         Command = command;

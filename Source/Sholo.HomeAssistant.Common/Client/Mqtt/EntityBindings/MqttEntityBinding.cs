@@ -37,6 +37,11 @@ public class MqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinit
         }
 
         IsBound = true;
+
+        if (EntityConfiguration.EntityDefinition.ObjectId?.EndsWith("_countdown", StringComparison.OrdinalIgnoreCase) ?? false)
+        {
+            Delete();
+        }
     }
 
     public void SendDiscovery()

@@ -12,7 +12,7 @@ public class ButtonMqttEntityConfigurationBuilder :
     IButtonMqttEntityConfigurationBuilder
 {
     public override IButtonMqttEntityConfigurationBuilder WithDefaultCommandHandlers()
-        => this;
+        => WithCommandHandler(new ButtonCommandHandler());
 
     public override IButtonMqttEntityConfigurationBuilder WithDefaultStateChangeHandlers()
         => WithStateChangeHandler(new ButtonStateChangeHandler());

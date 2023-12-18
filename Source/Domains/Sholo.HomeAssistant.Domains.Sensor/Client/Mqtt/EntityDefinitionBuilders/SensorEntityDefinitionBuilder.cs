@@ -36,4 +36,28 @@ public class SensorEntityDefinitionBuilder
         Target.UnitOfMeasurement = unitOfMeasurement;
         return this;
     }
+
+    public SensorEntityDefinitionBuilder WithSuggestedDisplayPrecision(ushort? numberOfDecimalsAfterRounding)
+    {
+        Target.SuggestedDisplayPrecision = numberOfDecimalsAfterRounding;
+        return this;
+    }
+
+    public SensorEntityDefinitionBuilder WithStateClass(SensorStateClass? stateClass)
+    {
+        Target.StateClass = stateClass;
+        return this;
+    }
+
+    public SensorEntityDefinitionBuilder WithLastReset(DateTime? lastReset)
+    {
+        Target.LastReset = lastReset;
+        return this;
+    }
+
+    public SensorEntityDefinitionBuilder WithLastResetValueTemplate(string? lastResetValueTemplate)
+    {
+        Target.LastResetValueTemplate = lastResetValueTemplate;
+        return this;
+    }
 }

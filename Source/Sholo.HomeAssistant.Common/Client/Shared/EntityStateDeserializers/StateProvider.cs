@@ -11,8 +11,8 @@ public class StateProvider : IStateProvider
 {
     public ISet<Type> RegisteredTypes { get; }
 
-    private IDictionary<string, IEntityStateDeserializer[]> EntityStateDeserializersByEntityId { get; }
-    private IDictionary<string, IStateDeserializer[]> StateDeserializersByDomain { get; }
+    private Dictionary<string, IEntityStateDeserializer[]> EntityStateDeserializersByEntityId { get; }
+    private Dictionary<string, IStateDeserializer[]> StateDeserializersByDomain { get; }
 
     public StateProvider(
         IEnumerable<IEntityStateDeserializer> entityStateDeserializers,
@@ -39,7 +39,8 @@ public class StateProvider : IStateProvider
             return entityStateDeserializers.Select(x => x.EntityStateType).First();
         }
 
-        var domain = GetDomainFromEntity(entityId);
+        var domain = EntityId.GetDomain(entityId);
+
         if (StateDeserializersByDomain.TryGetValue(domain, out var stateDeserializers))
         {
             foreach (var stateDeserializer in stateDeserializers)
@@ -61,7 +62,8 @@ public class StateProvider : IStateProvider
             return entityStateDeserializers.Select(x => x.TargetStateChangeEventMessageType).First();
         }
 
-        var domain = GetDomainFromEntity(entityId);
+        var domain = EntityId.GetDomain(entityId);
+
         if (StateDeserializersByDomain.TryGetValue(domain, out var stateDeserializers))
         {
             foreach (var stateDeserializer in stateDeserializers)
@@ -75,6 +77,4 @@ public class StateProvider : IStateProvider
 
         return typeof(EventMessage<StateChangePayload>);
     }
-
-    private string GetDomainFromEntity(string entityId) => entityId.Split(new[] { '.' }, 2).First();
 }

@@ -14,7 +14,7 @@ public interface IEntityDefinition : IDefinition
     /// <summary>
     /// The name of the device
     /// </summary>
-    string Name { get; }
+    string? Name { get; }
 
     /// <summary>
     /// An ID that uniquely identifies this device. If two devices have the same unique ID Home

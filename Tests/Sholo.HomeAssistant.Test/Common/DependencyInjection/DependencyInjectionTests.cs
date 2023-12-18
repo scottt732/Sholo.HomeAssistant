@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sholo.HomeAssistant.Client;
-using Sholo.HomeAssistant.Client.Rest;
+using Sholo.HomeAssistant.Client.Http.Rest;
 using Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 using Sholo.HomeAssistant.Client.WebSockets;
 using Sholo.HomeAssistant.Client.WebSockets.ConnectionService;
@@ -26,7 +26,7 @@ public class DependencyInjectionTests
     [Fact]
     public void AddClient_HasExpectedServices()
     {
-        var sp = CreateFixture(null, c => c.AddClient(null));
+        var sp = CreateFixture(null, c => c.WithHttpClient(hc => hc.AddWebSocketApiClient()));
         sp.GetRequiredService<IHomeAssistantRestClient>();
 
         sp.GetRequiredService<IHomeAssistantWebSocketsConnectionService>();
@@ -38,10 +38,12 @@ public class DependencyInjectionTests
         sp.GetRequiredService<IStateCodeGenerator>();
     }
 
+#pragma warning disable CA1859
     private static IServiceProvider CreateFixture(
         IDictionary<string, string> configuration = null,
-        Func<IHomeAssistantServiceCollection, IHomeAssistantServiceCollection> registrationConfigurator = null
+        Func<IHomeAssistantConfigurationBuilder, IHomeAssistantConfigurationBuilder> registrationConfigurator = null
     )
+#pragma warning restore CA1859
     {
         var configurationBuilder = new ConfigurationBuilder();
 
@@ -58,6 +60,6 @@ public class DependencyInjectionTests
 
         registrationConfigurator?.Invoke(homeAssistantServiceCollection);
 
-        return homeAssistantServiceCollection.BuildServiceProvider();
+        return homeAssistantServiceCollection.Services.BuildServiceProvider();
     }
 }

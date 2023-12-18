@@ -10,7 +10,7 @@ namespace Sholo.HomeAssistant.Client.Mqtt.EntityBindingManagers;
 
 public interface IMqttEntityBindingManager : IEntityBindingManager
 {
-    IEnumerable<Func<MqttRequestContext, Task<bool>>> GetTopicMessageHandlers();
+    IEnumerable<Func<IMqttRequestContext, Task<bool>>> GetTopicMessageHandlers();
 }
 
 public interface IMqttEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> : IMqttEntityBindingManager, IEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition>

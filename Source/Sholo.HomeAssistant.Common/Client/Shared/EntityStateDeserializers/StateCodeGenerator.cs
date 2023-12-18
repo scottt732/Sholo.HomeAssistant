@@ -12,9 +12,9 @@ namespace Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 [PublicAPI]
 public class StateCodeGenerator : IStateCodeGenerator
 {
-    private IDictionary<string, ISet<string>> DomainsStates { get; } = new Dictionary<string, ISet<string>>();
-    private IDictionary<string, IDictionary<string, IDictionary<string, int>>> DomainAttributeCounts { get; } = new Dictionary<string, IDictionary<string, IDictionary<string, int>>>();
-    private IDictionary<string, ISet<string>> DomainAttributeNullability { get; } = new Dictionary<string, ISet<string>>();
+    private Dictionary<string, ISet<string>> DomainsStates { get; } = new();
+    private Dictionary<string, IDictionary<string, IDictionary<string, int>>> DomainAttributeCounts { get; } = new();
+    private Dictionary<string, ISet<string>> DomainAttributeNullability { get; } = new();
 
     private static readonly object LockObject = new();
 
@@ -22,7 +22,7 @@ public class StateCodeGenerator : IStateCodeGenerator
     {
         lock (LockObject)
         {
-            var entityDomain = GetDomainFromEntity(entityId);
+            var entityDomain = EntityId.GetDomain(entityId);
 
             if (state != null)
             {
@@ -227,7 +227,7 @@ public class StateCodeGenerator : IStateCodeGenerator
 
         isEnum = false;
 
-        if (observedValues.Keys.All(x => x.StartsWith("[", StringComparison.Ordinal) && x.EndsWith("]", StringComparison.Ordinal)))
+        if (observedValues.Keys.All(x => x.StartsWith('[') && x.EndsWith(']')))
         {
             try
             {
@@ -283,6 +283,4 @@ public class StateCodeGenerator : IStateCodeGenerator
 
         return "object"; // TODO?
     }
-
-    private string GetDomainFromEntity(string entityId) => entityId.Split(new[] { '.' }, 2).First();
 }

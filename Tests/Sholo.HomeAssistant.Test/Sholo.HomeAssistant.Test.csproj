@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,9 +12,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Domains.BuiltIn\Sholo.HomeAssistant.Domains.BuiltIn.csproj" />
-    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.Rest\Sholo.HomeAssistant.Client.Rest.csproj" />
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.Http.Rest\Sholo.HomeAssistant.Client.Http.Rest.csproj" />
+    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.Http.WebSockets\Sholo.HomeAssistant.Client.Http.WebSockets.csproj" />
     <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.Supervisor\Sholo.HomeAssistant.Client.Supervisor.csproj" />
-    <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client.WebSockets\Sholo.HomeAssistant.Client.WebSockets.csproj" />
     <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Client\Sholo.HomeAssistant.Client.csproj" />
     <ProjectReference Include="..\..\Source\Sholo.HomeAssistant.Common\Sholo.HomeAssistant.Common.csproj" />
   </ItemGroup>
@@ -24,7 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Update="Moq" Version="4.20.69" />
   </ItemGroup>
 

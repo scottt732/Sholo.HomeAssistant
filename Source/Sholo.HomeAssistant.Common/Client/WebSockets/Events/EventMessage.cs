@@ -8,7 +8,7 @@ public class EventMessage : BaseResultMessage, IEventMessage
     public int Id { get; set; }
 
     protected EventMessage()
-        : base(HomeAssistantWsMessageType.Event)
+        : base(HomeAssistantWsMessageTypes.Event)
     {
     }
 }

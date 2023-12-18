@@ -9,7 +9,7 @@ public class SubscribeCommand : BaseSubscriptionMessage
 
     public SubscribeCommand()
     {
-        MessageType = HomeAssistantWsMessageType.SubscribeEvents;
+        MessageType = HomeAssistantWsMessageTypes.SubscribeEvents;
     }
 
     public SubscribeCommand(string? eventType)

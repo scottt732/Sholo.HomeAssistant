@@ -11,7 +11,7 @@ namespace Sholo.HomeAssistant.Test.Client.Rest;
 [PublicAPI]
 public class TestHttpMessageHandler : HttpMessageHandler
 {
-    private IRequestConfigurationProvider ConfigurationProvider { get; } = new RequestConfigurationProvider();
+    private RequestConfigurationProvider ConfigurationProvider { get; } = new();
 
     public TestHttpMessageHandler Configure(Func<HttpRequestMessage, bool> requestMatcher, Func<HttpRequestMessage, Task<HttpResponseMessage>> responseFactory)
     {

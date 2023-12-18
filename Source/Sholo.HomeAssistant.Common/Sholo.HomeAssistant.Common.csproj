@@ -2,7 +2,7 @@
 
   <PropertyGroup Label="Build">
     <RootNamespace>Sholo.HomeAssistant</RootNamespace>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
@@ -13,10 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[7.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[7.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[7.0.0,)" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="[7.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[8.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[8.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[8.0.0,)" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="[8.0.0,)" />
     <PackageReference Include="MiniValidation" Version="0.9.0" />
   </ItemGroup>
 
@@ -27,7 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Client\Speech\Events\" />
     <Folder Include="DeviceClasses\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Sholo.Mqtt\Source\Sholo.Mqtt\Sholo.Mqtt.csproj" />
   </ItemGroup>
 
 </Project>

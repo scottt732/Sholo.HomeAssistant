@@ -14,6 +14,7 @@ using Sholo.HomeAssistant.Client.Mqtt.MessageBus;
 using Sholo.Mqtt.Application.Builder;
 using Sholo.Mqtt.Application.BuilderConfiguration;
 using Sholo.Mqtt.Application.Provider;
+using Sholo.Mqtt.Middleware;
 
 namespace Sholo.HomeAssistant.Client.Mqtt.ControlPanel;
 
@@ -52,23 +53,19 @@ public class MqttEntityControlPanel : IMqttEntityControlPanelHost, IConfigureMqt
 
     private Dictionary<string, IMqttMiddleware> MiddlewareByDomain { get; } = new();
 
-    public MqttEntityControlPanel(IEnumerable<IEntityBindingManager> entityBindingManagers)
+    public MqttEntityControlPanel(IEnumerable<IEntityBindingManager> entityBindingManagers = null)
     {
         CollectionChangeSubscription = ObserveCollectionChanges();
 
-        /*
-        TODO: Can't handle constructor time injection due to lack of type info w/o using reflection
-        TODO: May be able to use IMqttEntityBindingManagerConfiguration and extension methods to instantiate
-
-        Had constructor param IEnumerable<IEntityBindingManager> entityBindingManagers = null but need TMqttEntityConfiguration, TEntity, TEntityDefinition
-        */
         if (entityBindingManagers != null)
         {
             foreach (var entityBindingManager in entityBindingManagers)
             {
-                // var middleware = new EntityCommandMiddleware<TMqttEntityConfiguration, TEntity, TEntityDefinition>(entityBindingManager);
-                // entityBindingManager.RebuildRequired += RebuildRequired;
-                // _entityBindingManagers.Add(entityBindingManager);
+                var middleware = entityBindingManager.CreateMiddleware();
+                MiddlewareByDomain[entityBindingManager.Domain.Name] = middleware;
+
+                entityBindingManager.RebuildRequired += RebuildRequired;
+                _entityBindingManagers.Add(entityBindingManager);
             }
         }
     }
@@ -116,9 +113,6 @@ public class MqttEntityControlPanel : IMqttEntityControlPanelHost, IConfigureMqt
         {
             entityBindingManager = new MqttStatefulEntityBindingManager<TDomain, TMqttEntityConfiguration, TEntity, TEntityDefinition>(Enumerable.Empty<TMqttEntityConfiguration>());
             RegisterMiddleware(entityBindingManager);
-            entityBindingManager.RebuildRequired += RebuildRequired;
-
-            _entityBindingManagers.Add(entityBindingManager);
         }
 
         return entityBindingManager;
@@ -138,9 +132,6 @@ public class MqttEntityControlPanel : IMqttEntityControlPanelHost, IConfigureMqt
         {
             entityBindingManager = new MqttEntityBindingManager<TDomain, TMqttEntityConfiguration, TEntity, TEntityDefinition>(Enumerable.Empty<TMqttEntityConfiguration>());
             RegisterMiddleware(entityBindingManager);
-            entityBindingManager.RebuildRequired += RebuildRequired;
-
-            _entityBindingManagers.Add(entityBindingManager);
         }
 
         return entityBindingManager;
@@ -185,7 +176,7 @@ public class MqttEntityControlPanel : IMqttEntityControlPanelHost, IConfigureMqt
         foreach (var ebm in EntityBindingManagers)
         {
             var middleware = MiddlewareByDomain[ebm.Domain.Name];
-            mqttApplicationBuilder.UseMiddleware(middleware);
+            mqttApplicationBuilder = mqttApplicationBuilder.UseMiddleware(middleware);
         }
     }
 
@@ -246,10 +237,13 @@ public class MqttEntityControlPanel : IMqttEntityControlPanelHost, IConfigureMqt
         where TEntity : IEntity
         where TEntityDefinition : IEntityDefinition
     {
-        if (!MiddlewareByDomain.TryGetValue(entityBindingManager.Domain.Name, out var middleware))
+        if (!MiddlewareByDomain.TryGetValue(entityBindingManager.Domain.Name, out _))
         {
-            middleware = new EntityCommandMiddleware<TMqttEntityConfiguration, TEntity, TEntityDefinition>(entityBindingManager);
+            var middleware = entityBindingManager.CreateMiddleware();
             MiddlewareByDomain[entityBindingManager.Domain.Name] = middleware;
+
+            entityBindingManager.RebuildRequired += RebuildRequired;
+            _entityBindingManagers.Add(entityBindingManager);
         }
     }
 }

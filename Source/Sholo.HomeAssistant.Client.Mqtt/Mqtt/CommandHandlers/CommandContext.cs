@@ -1,8 +1,10 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Primitives;
 using MQTTnet.Protocol;
 using Sholo.HomeAssistant.Client.Mqtt.ApplicationMessage;
 using Sholo.HomeAssistant.Client.Mqtt.Entities;
@@ -22,14 +24,14 @@ public class CommandContext<TEntity, TEntityDefinition> : ICommandContext<TEntit
     public ArraySegment<byte> Payload => Context.Payload;
     public QualityOfServiceLevel QualityOfServiceLevel { get; }
     public bool Retain => Context.Retain;
-    public KeyValuePair<string, string>[] UserProperties { get; }
-    public string ContentType => Context.ContentType;
-    public string ResponseTopic => Context.ResponseTopic;
+    public IReadOnlyDictionary<string, StringValues> UserProperties { get; }
+    public string? ContentType => Context.ContentType;
+    public string? ResponseTopic => Context.ResponseTopic;
     public PayloadFormatIndicator? PayloadFormatIndicator { get; }
     public uint? MessageExpiryInterval => Context.MessageExpiryInterval;
     public ushort? TopicAlias => Context.TopicAlias;
-    public byte[] CorrelationData => Context.CorrelationData;
-    public uint[] SubscriptionIdentifiers => Context.SubscriptionIdentifiers;
+    public byte[]? CorrelationData => Context.CorrelationData;
+    public uint[]? SubscriptionIdentifiers => Context.SubscriptionIdentifiers;
     public string ClientId => Context.ClientId;
 
     public async Task PublishAsync(IApplicationMessage message, CancellationToken cancellationToken = default)
@@ -37,9 +39,9 @@ public class CommandContext<TEntity, TEntityDefinition> : ICommandContext<TEntit
         await Context.PublishAsync(message.ToMqttNetApplicationMessage(), cancellationToken);
     }
 
-    internal MqttRequestContext Context { get; }
+    private IMqttRequestContext Context { get; }
 
-    public CommandContext(MqttRequestContext context, TEntity entity, TEntityDefinition entityDefinition)
+    public CommandContext(IMqttRequestContext context, TEntity entity, TEntityDefinition entityDefinition)
     {
         Context = context;
         Entity = entity;
@@ -49,7 +51,7 @@ public class CommandContext<TEntity, TEntityDefinition> : ICommandContext<TEntit
         {
             MqttPayloadFormatIndicator.Unspecified => Mqtt.PayloadFormatIndicator.Unspecified,
             MqttPayloadFormatIndicator.CharacterData => Mqtt.PayloadFormatIndicator.CharacterData,
-            _ => throw new ArgumentOutOfRangeException(nameof(context.PayloadFormatIndicator), $"The {nameof(context.PayloadFormatIndicator)} value is invalid")
+            _ => throw new ArgumentOutOfRangeException(nameof(context), $"The {nameof(context.PayloadFormatIndicator)} value is invalid")
         };
 
         QualityOfServiceLevel = context.QualityOfServiceLevel switch
@@ -57,11 +59,9 @@ public class CommandContext<TEntity, TEntityDefinition> : ICommandContext<TEntit
             MqttQualityOfServiceLevel.AtMostOnce => QualityOfServiceLevel.AtMostOnce,
             MqttQualityOfServiceLevel.AtLeastOnce => QualityOfServiceLevel.AtLeastOnce,
             MqttQualityOfServiceLevel.ExactlyOnce => QualityOfServiceLevel.ExactlyOnce,
-            _ => throw new ArgumentOutOfRangeException(nameof(context.QualityOfServiceLevel), $"The {nameof(context.QualityOfServiceLevel)} value is invalid")
+            _ => throw new ArgumentOutOfRangeException(nameof(context), $"The {nameof(context.QualityOfServiceLevel)} value is invalid")
         };
 
-        UserProperties = context.MqttUserProperties
-            .Select(x => new KeyValuePair<string, string>(x.Name, x.Value))
-            .ToArray();
+        UserProperties = context.UserProperties;
     }
 }

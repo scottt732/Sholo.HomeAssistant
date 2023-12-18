@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 using Sholo.HomeAssistant.Settings;

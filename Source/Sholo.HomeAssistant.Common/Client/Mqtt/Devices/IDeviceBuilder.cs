@@ -1,8 +1,17 @@
+using System;
+
 namespace Sholo.HomeAssistant.Client.Mqtt.Devices;
 
 [PublicAPI]
 public interface IDeviceBuilder
 {
+    /// <summary>
+    /// (Optional) A link to the webpage that can manage the configuration of this device.
+    /// </summary>
+    /// <param name="configurationUrl">An <code>http://</code>, <code>https://</code>, or <code>homeassistant://</code> URL to configure the entity</param>
+    /// <returns>The <see cref="IDeviceBuilder" /></returns>
+    IDeviceBuilder WithConfigurationUrl(Uri? configurationUrl);
+
     /// <summary>
     /// (Optional) Adds a connection of the device to the outside world.  For example the
     /// MAC address of a network interface: 'connections': ['mac', '02:5b:26:a8:dc:12'].
@@ -13,11 +22,25 @@ public interface IDeviceBuilder
     IDeviceBuilder WithConnection(string connectionType, string connectionIdentifier);
 
     /// <summary>
+    /// (Optional) The hardware version of the device.
+    /// </summary>
+    /// <param name="hwVersion">The hardware version</param>
+    /// <returns>The <see cref="IDeviceBuilder" /></returns>
+    IDeviceBuilder WithHwVersion(string hwVersion);
+
+    /// <summary>
     /// (Optional) Adds an ID that uniquely identify the device. For example a serial number.
     /// </summary>
     /// <param name="identifier">An ID that uniquely identify the device</param>
     /// <returns>The <see cref="IDeviceBuilder" /></returns>
     IDeviceBuilder WithIdentifier(string identifier);
+
+    /// <summary>
+    /// (Optional) Adds one or more IDs that uniquely identify the device. For example a serial number.
+    /// </summary>
+    /// <param name="identifiers">One or more IDs that uniquely identify the device</param>
+    /// <returns>The <see cref="IDeviceBuilder" /></returns>
+    IDeviceBuilder WithIdentifiers(params string[] identifiers);
 
     /// <summary>
     /// (Optional) The manufacturer of the device.

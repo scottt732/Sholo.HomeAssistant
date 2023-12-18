@@ -9,4 +9,8 @@ public interface ISensorEntityDefinitionBuilder<out TSelf> : ICoreSensorEntityDe
 {
     TSelf WithIcon(string icon);
     TSelf WithUnitOfMeasurement(string unitOfMeasurement);
+    TSelf WithSuggestedDisplayPrecision(ushort? numberOfDecimalsAfterRounding);
+    TSelf WithStateClass(SensorStateClass? stateClass);
+    TSelf WithLastReset(DateTime? lastReset);
+    TSelf WithLastResetValueTemplate(string? lastResetValueTemplate);
 }

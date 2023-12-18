@@ -5,7 +5,7 @@ namespace Sholo.HomeAssistant.Client.WebSockets.Messages.States;
 public class GetStatesCommandResult : BaseCommandResult<JToken[]>
 {
     public GetStatesCommandResult()
-        : base(HomeAssistantWsMessageType.Result)
+        : base(HomeAssistantWsMessageTypes.Result)
     {
     }
 }

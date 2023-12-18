@@ -1,25 +1,20 @@
 using System.Threading.Tasks;
-using Sholo.HomeAssistant.Client.Mqtt.Entities;
-using Sholo.HomeAssistant.Client.Mqtt.EntityConfigurations;
-using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
 using Sholo.Mqtt;
-using Sholo.Mqtt.Application.Builder;
+using Sholo.Mqtt.Middleware;
 
 namespace Sholo.HomeAssistant.Client.Mqtt.EntityBindingManagers;
 
-public class EntityCommandMiddleware<TMqttEntityConfiguration, TEntity, TEntityDefinition> : IMqttMiddleware
-    where TMqttEntityConfiguration : IMqttEntityConfiguration<TEntity, TEntityDefinition>
-    where TEntity : IEntity
-    where TEntityDefinition : IEntityDefinition
+[PublicAPI]
+public class EntityCommandMiddleware : IMqttMiddleware
 {
-    private IMqttEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> EntityBindingManager { get; }
+    private IMqttEntityBindingManager EntityBindingManager { get; }
 
-    public EntityCommandMiddleware(IMqttEntityBindingManager<TMqttEntityConfiguration, TEntity, TEntityDefinition> entityBindingManager)
+    public EntityCommandMiddleware(IMqttEntityBindingManager entityBindingManager)
     {
         EntityBindingManager = entityBindingManager;
     }
 
-    public async Task<bool> InvokeAsync(MqttRequestContext context, MqttRequestDelegate next)
+    public async Task<bool> InvokeAsync(IMqttRequestContext context, MqttRequestDelegate next)
     {
         foreach (var messageHandler in EntityBindingManager.GetTopicMessageHandlers())
         {

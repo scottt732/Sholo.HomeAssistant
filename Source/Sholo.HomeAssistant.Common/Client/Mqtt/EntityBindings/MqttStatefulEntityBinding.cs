@@ -13,7 +13,7 @@ public class MqttStatefulEntityBinding<TMqttEntityConfiguration, TEntity, TEntit
     where TEntity : IStatefulEntity
     where TEntityDefinition : IStatefulEntityDefinition
 {
-    private IDictionary<string, IDisposable> SubscriptionsByDiscoveryTopic { get; } = new Dictionary<string, IDisposable>();
+    private Dictionary<string, IDisposable> SubscriptionsByDiscoveryTopic { get; } = new();
 
     public MqttStatefulEntityBinding(
         TMqttEntityConfiguration entityConfiguration

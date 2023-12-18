@@ -4,7 +4,7 @@ namespace Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
 public interface IDeviceTriggerEntityDefinition : IEntityDefinition
 {
     /// <summary>
-    /// The type of automation, must be ‘trigger'.
+    /// The type of automation, must be 'trigger'.
     /// </summary>
     string AutomationType { get; }
 

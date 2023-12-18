@@ -4,6 +4,7 @@ using Sholo.HomeAssistant.Client.Http.WebSockets.BackgroundService;
 using Sholo.HomeAssistant.Client.Http.WebSockets.ConnectionService;
 using Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 using Sholo.HomeAssistant.Client.WebSockets;
+using Sholo.HomeAssistant.Client.WebSockets.ConnectionService;
 using Sholo.HomeAssistant.StateDeserializers;
 
 namespace Sholo.HomeAssistant.Client;

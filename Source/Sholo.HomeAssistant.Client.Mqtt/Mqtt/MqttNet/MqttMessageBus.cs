@@ -40,7 +40,7 @@ public class MqttMessageBus : IMqttMessageBus
 
     private async Task SendMessageAsync(IManagedMqttClient client, MqttApplicationMessage message)
     {
-        Logger.LogDebug("< [{Topic}] {Payload}", message.Topic, message.ConvertPayloadToString());
+        Logger.LogInformation("< [{Topic}] {Payload}", message.Topic, message.ConvertPayloadToString());
         await client.EnqueueAsync(message);
     }
 }

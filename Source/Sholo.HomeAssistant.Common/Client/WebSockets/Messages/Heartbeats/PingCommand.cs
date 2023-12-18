@@ -4,6 +4,6 @@ public sealed class PingCommand : BaseCommand
 {
     public PingCommand()
     {
-        MessageType = HomeAssistantWsMessageType.Ping;
+        MessageType = HomeAssistantWsMessageTypes.Ping;
     }
 }

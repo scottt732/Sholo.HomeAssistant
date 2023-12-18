@@ -15,7 +15,7 @@ public static class HomeAssistantWebSocketsClientExtensions
         Func<IEventMessage<StateChangePayload>, bool>? predicate = null,
         CancellationToken cancellationToken = default
     )
-        => client.SubscribeAsync(EventTypes.Instance.StateChanged(), predicate, cancellationToken);
+        => client.SubscribeEventsAsync(EventTypes.Instance.StateChanged(), predicate, cancellationToken);
 
     public static IAsyncEnumerable<IEventMessage<StateChangePayload<TState>>> GetStateChangesAsync<TState>(
         this IHomeAssistantWebSocketsClient client,
@@ -23,7 +23,7 @@ public static class HomeAssistantWebSocketsClientExtensions
         CancellationToken cancellationToken = default
     )
         where TState : EntityState
-        => client.SubscribeAsync(EventTypes.Instance.StateChanged(), predicate, cancellationToken);
+        => client.SubscribeEventsAsync(EventTypes.Instance.StateChanged(), predicate, cancellationToken);
 
     // TODO: Broken?
     public static IAsyncEnumerable<IEventMessage<TimeChangedPayload>> GetTimeChangesAsync(
@@ -31,7 +31,7 @@ public static class HomeAssistantWebSocketsClientExtensions
         Func<IEventMessage<TimeChangedPayload>, bool>? predicate = null,
         CancellationToken cancellationToken = default
     )
-        => client.SubscribeAsync(EventTypes.Instance.TimeChanged(), predicate, cancellationToken);
+        => client.SubscribeEventsAsync(EventTypes.Instance.TimeChanged(), predicate, cancellationToken);
 
     // See HomeAssistantWebSocketsClientExtensions.cs in Sholo.HomeAssistant.Client.Domains
 }

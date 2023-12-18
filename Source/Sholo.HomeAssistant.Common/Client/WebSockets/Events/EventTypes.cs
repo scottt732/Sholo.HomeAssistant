@@ -16,10 +16,7 @@ public class EventTypes : IEventTypes
 
     public static string FormatName([CallerMemberName] string? name = null)
     {
-        if (name == null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(name);
 
         if (name.Length == 0)
         {

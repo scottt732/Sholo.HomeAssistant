@@ -1,8 +1,13 @@
-using Sholo.HomeAssistant.Client.WebSockets;
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using Sholo.HomeAssistant.Client.Http.WebSockets.ConnectionService;
 using Sholo.HomeAssistant.Client.WebSockets.Events;
 using Sholo.HomeAssistant.Client.WebSockets.Messages;
 
-namespace Sholo.HomeAssistant.Client.Http.WebSockets.ConnectionService;
+namespace Sholo.HomeAssistant.Client.WebSockets.ConnectionService;
 
 [PublicAPI]
 public interface IHomeAssistantWebSocketsConnectionService
@@ -16,6 +21,16 @@ public interface IHomeAssistantWebSocketsConnectionService
 
     Task<TCommandResult> SendCommandAsync<TCommand, TCommandResult>(TCommand command, CancellationToken cancellationToken)
         where TCommand : BaseCommand;
+
+    Task<TEventMessage> SendCommandAndWaitForEventAsync<TCommand, TCommandResult, TEventMessage>(TCommand command, float? timeout = null, CancellationToken cancellationToken = default)
+        where TCommand : BaseCommand
+        where TCommandResult : BaseCommandResult
+        where TEventMessage : IEventMessage;
+
+    IAsyncEnumerable<TEventMessage> SendCommandAndSubscribeEventsAsync<TCommand, TCommandResult, TEventMessage>(TCommand command, CancellationToken cancellationToken = default)
+        where TCommand : BaseCommand
+        where TCommandResult : BaseCommandResult
+        where TEventMessage : IEventMessage;
 
     IAsyncEnumerable<IEventMessage> SubscribeAsync(
         string? eventType = null,

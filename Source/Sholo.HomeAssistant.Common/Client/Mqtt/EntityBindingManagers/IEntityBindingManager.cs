@@ -5,6 +5,7 @@ using Sholo.HomeAssistant.Client.Mqtt.EntityBindings;
 using Sholo.HomeAssistant.Client.Mqtt.EntityConfigurations;
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
 using Sholo.HomeAssistant.Client.Mqtt.MessageBus;
+using Sholo.Mqtt.Middleware;
 
 namespace Sholo.HomeAssistant.Client.Mqtt.EntityBindingManagers;
 
@@ -15,8 +16,8 @@ public interface IEntityBindingManager : IDisposable
 
     event EventHandler RebuildRequired;
 
+    IMqttMiddleware CreateMiddleware();
     IEnumerable<IMqttEntityBinding> UntypedEntityConfigurations { get; }
-
     void BindAll(IMqttMessageBus mqttMessageBus, bool sendDiscovery);
     void SendDiscoveryAll();
     void DeleteAll();

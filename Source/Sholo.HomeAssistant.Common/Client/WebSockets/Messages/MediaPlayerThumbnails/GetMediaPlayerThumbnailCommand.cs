@@ -7,7 +7,7 @@ public class GetMediaPlayerThumbnailCommand : BaseCommand
 
     public GetMediaPlayerThumbnailCommand(string entityId)
     {
-        MessageType = HomeAssistantWsMessageType.MediaPlayerThumbnail;
+        MessageType = HomeAssistantWsMessageTypes.MediaPlayerThumbnail;
         EntityId = entityId;
     }
 }

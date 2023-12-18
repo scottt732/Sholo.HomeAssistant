@@ -4,6 +4,6 @@ public class GetConfigurationCommand : BaseCommand
 {
     public GetConfigurationCommand()
     {
-        MessageType = HomeAssistantWsMessageType.GetConfig;
+        MessageType = HomeAssistantWsMessageTypes.GetConfig;
     }
 }

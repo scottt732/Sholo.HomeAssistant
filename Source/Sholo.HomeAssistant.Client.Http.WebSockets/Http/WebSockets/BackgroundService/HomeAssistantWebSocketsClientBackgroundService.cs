@@ -1,4 +1,4 @@
-using Sholo.HomeAssistant.Client.Http.WebSockets.ConnectionService;
+using Sholo.HomeAssistant.Client.WebSockets.ConnectionService;
 
 namespace Sholo.HomeAssistant.Client.Http.WebSockets.BackgroundService;
 

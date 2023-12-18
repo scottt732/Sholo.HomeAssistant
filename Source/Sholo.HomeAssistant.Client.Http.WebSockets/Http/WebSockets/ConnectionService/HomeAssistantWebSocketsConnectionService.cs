@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -7,14 +8,13 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using Sholo.HomeAssistant.Client.Http.WebSockets.BackgroundService;
 using Sholo.HomeAssistant.Client.Http.WebSockets.Callbacks;
 using Sholo.HomeAssistant.Client.Http.WebSockets.Subscriptions;
 using Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 using Sholo.HomeAssistant.Client.WebSockets;
+using Sholo.HomeAssistant.Client.WebSockets.ConnectionService;
 using Sholo.HomeAssistant.Client.WebSockets.Events;
 using Sholo.HomeAssistant.Client.WebSockets.Messages;
 using Sholo.HomeAssistant.Client.WebSockets.Messages.Authentication;
@@ -41,11 +41,15 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
     private JsonSerializerSettings JsonSerializerSettings { get; }
     private JsonSerializer JsonSerializer { get; }
 
-    private ISubject<IEventMessage> EventMessageSubject { get; } = new Subject<IEventMessage>();
-    private ISubject<WebsocketsConnectionState> ConnectionStateChangesSubject { get; } = new Subject<WebsocketsConnectionState>();
+    private Subject<IEventMessage> EventMessageSubject { get; } = new();
+    private Subject<WebsocketsConnectionState> ConnectionStateChangesSubject { get; } = new();
     private ConcurrentDictionary<long, ISubscription> SubscriptionsById { get; } = new();
     private ConcurrentDictionary<long, IMessageCallback> OutstandingCommands { get; } = new();
+    private ConcurrentBag<string> LoggedUnrecognizedMessageTypes { get; } = new();
     private BlockingCollection<IMessageCallback> PendingCommands { get; } = new();
+    private HomeAssistantWsMessageTypeConverter WsMessageTypeConverter { get; } = new();
+
+    private const int BufferSize = 65536;
 
     private (WebSocketsClientServicePhase Original, WebSocketsClientServicePhase Current)[] ValidStateTransitions { get; } =
     {
@@ -147,7 +151,7 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
                 // ReSharper restore AccessToDisposedClosure
                 await Task.WhenAny(longRunningTasks);
 
-                intervalCancellationTokenSource.Cancel();
+                await intervalCancellationTokenSource.CancelAsync();
 
                 await Task.WhenAll(allTasks);
             }
@@ -187,6 +191,60 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
     public Task<TCommandResult> SendCommandAsync<TCommand, TCommandResult>(TCommand command, CancellationToken cancellationToken)
         where TCommand : BaseCommand
         => SendMessageAsync<TCommand, TCommandResult>(command, cancellationToken);
+
+    public async IAsyncEnumerable<TEventMessage> SendCommandAndSubscribeEventsAsync<TCommand, TCommandResult, TEventMessage>(TCommand command, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        where TCommand : BaseCommand
+        where TCommandResult : BaseCommandResult
+        where TEventMessage : IEventMessage
+    {
+        var commandResult = await SendMessageAsync<TCommand, TCommandResult>(command, cancellationToken);
+
+        commandResult.EnsureSuccessResult();
+
+        await foreach (var evt in ProcessSubscription<TEventMessage>(
+                           "render_template",
+                           e => e.Id == commandResult.Id,
+                           commandResult.Id,
+                           cancellationToken
+                       ))
+        {
+            yield return evt;
+        }
+    }
+
+    public async Task<TEventMessage> SendCommandAndWaitForEventAsync<TCommand, TCommandResult, TEventMessage>(TCommand command, float? timeout = null, CancellationToken cancellationToken = default)
+        where TCommand : BaseCommand
+        where TCommandResult : BaseCommandResult
+        where TEventMessage : IEventMessage
+    {
+        var commandResult = await SendMessageAsync<TCommand, TCommandResult>(command, cancellationToken);
+
+        commandResult.EnsureSuccessResult();
+
+        var timer = timeout.HasValue ? TimeSpan.FromSeconds(timeout.Value) : Timeout.InfiniteTimeSpan;
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        cts.CancelAfter(timer);
+
+        var res = await ProcessSubscription<TEventMessage>(
+            "rendered_template",
+            e => e.Id == commandResult.Id,
+            commandResult.Id,
+            cts.Token
+        )
+            .FirstOrDefaultAsync(cts.Token);
+
+        /*
+        var eventMessage = await EventMessages
+            .ObserveOn(TaskPoolScheduler.Default)
+            .Where(x => x.Id == commandResult.Id)
+            .FirstOrDefaultAsync()
+            .Timeout(timer);
+
+        eventMessage!.GetHashCode();
+        */
+
+        return default!;
+    }
 
     private Task<SubscribeResult> SubscribeAsync(SubscribeCommand subscribeMessage, CancellationToken cancellationToken)
         => SendMessageAsync<SubscribeCommand, SubscribeResult>(subscribeMessage, cancellationToken);
@@ -290,6 +348,8 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
     {
         foreach (var callback in PendingCommands.GetConsumingEnumerable(cancellationToken))
         {
+            // Wait for us to be online
+            OnlineEvent.Wait(cancellationToken);
             OutstandingCommands.TryAdd(callback.Id, callback);
             await callback.InvokeAsync(webSocket, cancellationToken);
         }
@@ -323,7 +383,7 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
     private async Task ReceiveMessagesAsync(WebSocket webSocket, EventWaitHandle authenticated, CancellationToken cancellationToken)
     {
         Logger.LogDebug("Listening for HA WebSocket messages...");
-        var buffer = new ArraySegment<byte>(new byte[8192]);
+        var buffer = new ArraySegment<byte>(new byte[BufferSize]);
         while (!cancellationToken.IsCancellationRequested)
         {
             using var ms = new MemoryStream();
@@ -351,12 +411,12 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
                 {
                     Logger.LogDebug("Retrieved message of type {MessageType}, Id {Id}", messageType, id.Value);
                 }
-                else if (messageType != HomeAssistantWsMessageType.Pong)
+                else if (!messageType.Equals(HomeAssistantWsMessageTypes.Pong))
                 {
                     Logger.LogDebug("Retrieved message of type {MessageType}", messageType);
                 }
 
-                if (messageType == HomeAssistantWsMessageType.AuthRequired)
+                if (messageType.Equals(HomeAssistantWsMessageTypes.AuthRequired))
                 {
                     Phase = WebSocketsClientServicePhase.AuthenticationRequired;
 
@@ -370,34 +430,29 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
                         },
                         cancellationToken);
                 }
-                else if (messageType == HomeAssistantWsMessageType.AuthOk || messageType == HomeAssistantWsMessageType.AuthInvalid)
+                else if (messageType.Equals(HomeAssistantWsMessageTypes.AuthOk))
                 {
-                    var authResult = await ReadAsMessageAsync<AuthResultMessage>(ms, cancellationToken);
-                    if (authResult.MessageType == HomeAssistantWsMessageType.AuthInvalid)
-                    {
-                        Logger.LogError("Authentication failed: {Message}", authResult.Message);
-                        throw new HomeAssistantAuthenticationException(authResult.Message);
-                    }
-                    else if (authResult.MessageType == HomeAssistantWsMessageType.AuthOk)
-                    {
-                        Phase = WebSocketsClientServicePhase.Online;
-                        authenticated.Set();
-                        Logger.LogInformation("Authenticated successfully");
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException($"Unexpected message type in auth response: {authResult.MessageType}");
-                    }
+                    ms.Seek(0, SeekOrigin.Begin);
+                    var authResult = await ReadAsMessageAsync<AuthOkMessage>(ms, cancellationToken);
+                    Phase = WebSocketsClientServicePhase.Online;
+                    authenticated.Set();
+                    Logger.LogInformation("Authenticated successfully");
                 }
-                else if (messageType == HomeAssistantWsMessageType.Event)
+                else if (messageType.Equals(HomeAssistantWsMessageTypes.AuthInvalid))
                 {
-                    /*
+                    ms.Seek(0, SeekOrigin.Begin);
+                    var authResult = await ReadAsMessageAsync<AuthInvalidMessage>(ms, cancellationToken);
+                    Logger.LogError("Authentication failed: {Message}", authResult.Message ?? throw new InvalidOperationException("auth_invalid message did not contain an error message"));
+                    throw new HomeAssistantAuthenticationException(authResult.Message);
+                }
+                else if (messageType.Equals(HomeAssistantWsMessageTypes.Event))
+                {
                     if (!id.HasValue)
                     {
                         throw new InvalidOperationException();
                     }
 
-                    EventMessage eventMessage;
+                    IEventMessage eventMessage;
                     if (SubscriptionsById.TryGetValue(id.Value, out var subscription))
                     {
                         eventMessage = await subscription.ParseMessageAsync(ms, cancellationToken);
@@ -408,9 +463,8 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
                     }
 
                     EventMessageSubject.OnNext(eventMessage);
-                    */
 
-                    await ProcessStateChangeMessageAsync(ms, cancellationToken);
+                    // await ProcessStateChangeMessageAsync(ms, cancellationToken);
                 }
                 else if (id.HasValue)
                 {
@@ -431,7 +485,7 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
             else if (result.MessageType == WebSocketMessageType.Binary)
             {
                 // Not handled but don't throw for now
-                Logger.LogWarning("Received Binary message; not implemented");
+                Logger.LogWarning("Received Binary data; ignoring");
             }
             else if (result.MessageType == WebSocketMessageType.Close)
             {
@@ -457,19 +511,26 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
             JsonSerializer.Serialize(jw, objectToSerialize);
         }
 
-        var encoded = Encoding.UTF8.GetBytes(sb.ToString());
+        var json = sb.ToString();
+
+        if (Debugger.IsAttached)
+        {
+            Logger.LogInformation("Outgoing WS message: {Message}", json);
+        }
+
+        var encoded = Encoding.UTF8.GetBytes(json);
         var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
 
         await webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, cancellationToken);
     }
 
-    private Task ProcessStateChangeMessageAsync(Stream ms, CancellationToken cancellationToken)
+    private async Task ProcessStateChangeMessageAsync(Stream ms, CancellationToken cancellationToken)
     {
         Type messageType;
-        using (var reader = new StreamReader(ms, Encoding.UTF8, false, 16384, true))
-        using (var jsonReader = new JsonTextReader(reader))
+        using (var reader = new StreamReader(ms, Encoding.UTF8, false, BufferSize, true))
+        await using (var jsonReader = new JsonTextReader(reader))
         {
-            var jObject = JObject.Load(jsonReader);
+            var jObject = await JObject.LoadAsync(jsonReader, cancellationToken);
 
             var eventObject = jObject["event"];
             var eventDataObject = eventObject?["data"];
@@ -489,50 +550,77 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
             }
             else
             {
-                return Task.CompletedTask;
+                return;
             }
         }
 
         cancellationToken.ThrowIfCancellationRequested();
         ms.Seek(0, SeekOrigin.Begin);
 
-        using (var reader = new StreamReader(ms, Encoding.UTF8, false, 16384, true))
-        using (var jsonReader = new JsonTextReader(reader))
+        using (var reader = new StreamReader(ms, Encoding.UTF8, false, BufferSize, true))
+        await using (var jsonReader = new JsonTextReader(reader))
         {
             var message = JsonSerializer.Deserialize(jsonReader, messageType);
             var eventMessage = (IEventMessage?)message;
 
             EventMessageSubject.OnNext(eventMessage!);
         }
-
-        return Task.CompletedTask;
     }
 
-    private Task<TMessage> ReadAsMessageAsync<TMessage>(Stream ms, CancellationToken cancellationToken)
+    private async Task<TMessage> ReadAsMessageAsync<TMessage>(Stream ms, CancellationToken cancellationToken)
     {
-        using var reader = new StreamReader(ms, Encoding.UTF8, false, 16384, true);
-        using var jsonReader = new JsonTextReader(reader);
+        // Logger.IsEnabled(LogLevel.Debug) &&
+        if (Debugger.IsAttached)
+        {
+            using (var debugReader = new StreamReader(ms, Encoding.UTF8, false, BufferSize, true))
+            {
+                var json = await debugReader.ReadToEndAsync(cancellationToken);
+                Logger.LogInformation("Incoming WS message: {Json}", json);
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+        }
+
+        using var reader = new StreamReader(ms, Encoding.UTF8, false, BufferSize, true);
+        await using var jsonReader = new JsonTextReader(reader);
+
         var message = JsonSerializer.Deserialize<TMessage>(jsonReader);
-        return Task.FromResult(message ?? throw new InvalidOperationException());
+        return message ?? throw new InvalidOperationException();
     }
 
     private async ValueTask<(HomeAssistantWsMessageType MessageType, long? Id)> GetMessageIdAndTypeAsync(Stream ms, CancellationToken cancellationToken)
     {
         ms.Seek(0, SeekOrigin.Begin);
 
-        using var reader = new StreamReader(ms, Encoding.UTF8, false, 16384, true);
+        /*
+        if (Debugger.IsAttached)
+        {
+            using (var debugReader = new StreamReader(ms, Encoding.UTF8, false, BufferSize, true))
+            {
+                var json = await debugReader.ReadToEndAsync(cancellationToken);
+                Logger.LogInformation("Identifying message type for WS message: {Json}", json);
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+        }
+        */
+
+        using var reader = new StreamReader(ms, Encoding.UTF8, false, BufferSize, true);
         await using var jsonReader = new JsonTextReader(reader);
 
-        HomeAssistantWsMessageType? type = null;
+        HomeAssistantWsMessageType? wsMessageType = null;
         int? id = null;
 
         var objectDepth = 0;
         var state = ReaderState.NoExpectations;
 
-        var enumConverter = new StringEnumConverter(new SnakeCaseNamingStrategy());
-
         while (await jsonReader.ReadAsync(cancellationToken))
         {
+            if (objectDepth == 0 && jsonReader.TokenType == JsonToken.StartArray)
+            {
+                Debugger.Break();
+            }
+
             if (jsonReader.TokenType == JsonToken.StartObject)
             {
                 objectDepth++;
@@ -554,10 +642,17 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
             {
                 state = ReaderState.ExpectingTypeValue;
             }
-            else if (objectDepth == 1 && state == ReaderState.ExpectingTypeValue && jsonReader.TokenType == JsonToken.String && jsonReader.Value != null)
+            else if (objectDepth == 1 && state == ReaderState.ExpectingTypeValue && jsonReader is { TokenType: JsonToken.String, Value: not null })
             {
-                var typeObject = enumConverter.ReadJson(jsonReader, typeof(HomeAssistantWsMessageType), null, JsonSerializer);
-                type = (HomeAssistantWsMessageType?)typeObject ?? throw new InvalidOperationException("Unable to parse the message type");
+                var messageTypeString = jsonReader.Value.ToString() ?? throw new InvalidOperationException("Unable to parse the message type");
+                wsMessageType = HomeAssistantWsMessageTypes.Instance.GetOrCreate(messageTypeString, out var wasRecognized);
+
+                if (!wasRecognized && !LoggedUnrecognizedMessageTypes.Contains(messageTypeString))
+                {
+                    LoggedUnrecognizedMessageTypes.Add(messageTypeString);
+                    Logger.LogWarning("Unrecognized message type: {MessageType}", messageTypeString);
+                }
+
                 state = ReaderState.NoExpectations;
             }
             else if (state == ReaderState.ExpectingIdValue)
@@ -566,7 +661,7 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
                 throw new InvalidOperationException();
             }
 
-            if (type.HasValue)
+            if (wsMessageType != null)
             {
                 // The examples show the id attribute coming before the type attribute.  If that holds up, then either we already have
                 // an id or there isn't going to be one.  Short circuit out.  Fingers crossed this optimization is worth the headaches
@@ -576,12 +671,13 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
 
         ms.Seek(0, SeekOrigin.Begin);
 
-        if (!type.HasValue)
+        if (wsMessageType == null)
         {
             throw new InvalidOperationException("Unable to identify message type");
         }
 
-        return (type.Value, id);
+        Logger.LogDebug("Message type is {MessageType}, Id is {Id}", wsMessageType, id);
+        return (wsMessageType, id);
     }
 
     private enum ReaderState
@@ -598,15 +694,35 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
     )
         where TEventMessage : IEventMessage
     {
-        var localId = Guid.NewGuid();
         var subscribeCommand = new SubscribeCommand(eventType);
         var subscribeResult = await SubscribeAsync(subscribeCommand, cancellationToken);
         var subscriptionId = subscribeResult.Id;
 
-        var subscription = (Subscription<TEventMessage>)SubscriptionsById.GetOrAdd(subscribeResult.Id, _ =>
+        await foreach (var p in ProcessSubscription(eventType, predicate, subscriptionId, cancellationToken))
+        {
+            yield return p;
+        }
+    }
+
+    public IAsyncEnumerable<IEventMessage> SubscribeAsync(
+        string? eventType = null,
+        Func<IEventMessage, bool>? predicate = null,
+        CancellationToken cancellationToken = default
+    )
+        => SubscribeAsync<IEventMessage>(eventType, predicate, cancellationToken);
+
+    private async IAsyncEnumerable<TEventMessage> ProcessSubscription<TEventMessage>(
+        string? eventType,
+        Func<TEventMessage, bool>? predicate,
+        long subscriptionId,
+        [EnumeratorCancellation] CancellationToken cancellationToken
+    )
+        where TEventMessage : IEventMessage
+    {
+        var subscription = (Subscription<TEventMessage>)SubscriptionsById.GetOrAdd(subscriptionId, _ =>
         {
             var sub = new Subscription<TEventMessage>(
-                localId,
+                Guid.NewGuid(),
                 eventType,
                 subscriptionId,
                 em => em.Where(x => predicate?.Invoke(x) ?? true),
@@ -626,13 +742,6 @@ public class HomeAssistantWebSocketsConnectionService : IHomeAssistantWebSockets
             yield return message;
         }
     }
-
-    public IAsyncEnumerable<IEventMessage> SubscribeAsync(
-        string? eventType = null,
-        Func<IEventMessage, bool>? predicate = null,
-        CancellationToken cancellationToken = default
-    )
-        => SubscribeAsync<IEventMessage>(eventType, predicate, cancellationToken);
 
     private async Task RestoreSubscriptionsAsync(CancellationToken cancellationToken)
     {

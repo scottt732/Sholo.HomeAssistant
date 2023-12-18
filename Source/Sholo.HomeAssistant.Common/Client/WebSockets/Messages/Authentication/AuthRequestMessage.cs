@@ -14,7 +14,7 @@ public class AuthRequestMessage : BaseMessage
 
     public AuthRequestMessage()
     {
-        MessageType = HomeAssistantWsMessageType.Auth;
+        MessageType = HomeAssistantWsMessageTypes.Auth;
     }
 
     protected override IEnumerable<ValidationResult> Validate()

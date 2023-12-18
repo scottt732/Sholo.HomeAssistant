@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Sholo.HomeAssistant.Client.Mqtt.Devices;
@@ -6,11 +7,23 @@ namespace Sholo.HomeAssistant.Client.Mqtt.Devices;
 public interface IDevice
 {
     /// <summary>
+    /// Gets a link to the webpage that can manage the configuration of this device. Can
+    /// be either an <code>http://</code>, <code>https://</code> or an internal
+    /// <code>homeassistant://</code> URL.
+    /// </summary>
+    Uri? ConfigurationUrl { get; }
+
+    /// <summary>
     /// Gets a list of connections of the device to the outside world as a list of tuples
     /// [connection_type, connection_identifier]. For example the MAC address of a network
     /// interface: 'connections': ['mac', '02:5b:26:a8:dc:12'].
     /// </summary>
-    IDictionary<string, string>? Connections { get; }
+    IReadOnlyDictionary<string, string>? Connections { get; }
+
+    /// <summary>
+    /// The hardware version of the device.
+    /// </summary>
+    string? HwVersion { get; }
 
     /// <summary>
     /// Gets a list of IDs that uniquely identify the device. For example a serial number.
@@ -33,14 +46,14 @@ public interface IDevice
     string Name { get; }
 
     /// <summary>
+    /// The suggested name for the area if the device isn't in one yet.
+    /// </summary>
+    string? SuggestedArea { get; }
+
+    /// <summary>
     /// Gets the firmware version of the device.
     /// </summary>
     string SwVersion { get; }
-
-    /// <summary>
-    /// The suggested name for the area where the device is located.
-    /// </summary>
-    string? SuggestedArea { get; }
 
     /// <summary>
     /// Identifier of a device that routes messages between this device and Home Assistant.

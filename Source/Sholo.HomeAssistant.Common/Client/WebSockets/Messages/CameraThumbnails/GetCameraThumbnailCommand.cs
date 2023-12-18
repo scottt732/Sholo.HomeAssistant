@@ -6,7 +6,7 @@ public class GetCameraThumbnailCommand : BaseCommand
 
     public GetCameraThumbnailCommand(string entityId)
     {
-        MessageType = HomeAssistantWsMessageType.CameraThumbnail;
+        MessageType = HomeAssistantWsMessageTypes.CameraThumbnail;
         EntityId = entityId;
     }
 }

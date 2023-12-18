@@ -4,6 +4,6 @@ public class GetStatesCommand : BaseCommand
 {
     public GetStatesCommand()
     {
-        MessageType = HomeAssistantWsMessageType.GetStates;
+        MessageType = HomeAssistantWsMessageTypes.GetStates;
     }
 }

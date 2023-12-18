@@ -13,10 +13,7 @@ public static class AsyncEnumerableExtensions
         this IAsyncEnumerable<T> source,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source));
-        }
+        ArgumentNullException.ThrowIfNull(source);
 
         cancellationToken.ThrowIfCancellationRequested();
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Sholo.HomeAssistant.Client.Rest;
+using Sholo.HomeAssistant.Client.Http.Rest;
 using Sholo.HomeAssistant.Client.Shared.EntityStateDeserializers;
 using Sholo.HomeAssistant.Client.WebSockets.Messages.Config;
 using Sholo.HomeAssistant.Settings;
@@ -175,7 +175,7 @@ public sealed class HomeAssistantRestClientTests : IDisposable
         MockStateProvider.VerifyAll();
     }
 
-    private IHomeAssistantRestClient CreateRestClient(
+    private HomeAssistantRestClient CreateRestClient(
         Action<TestHttpMessageHandler> handlerConfig,
         Action<HomeAssistantClientOptions> optionsConfig = null)
     {

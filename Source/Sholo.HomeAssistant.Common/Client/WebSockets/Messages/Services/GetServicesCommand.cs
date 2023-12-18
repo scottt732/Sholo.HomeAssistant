@@ -4,6 +4,6 @@ public class GetServicesCommand : BaseCommand
 {
     public GetServicesCommand()
     {
-        MessageType = HomeAssistantWsMessageType.GetServices;
+        MessageType = HomeAssistantWsMessageTypes.GetServices;
     }
 }

@@ -25,7 +25,7 @@ public class CameraMqttEntityConfigurationBuilder :
             CommandHandlers.ToArray()
         );
 
-    private ICameraMqttEntityConfiguration Build(
+    private CameraMqttEntityConfiguration Build(
         ICamera entity,
         ICameraEntityDefinition entityDefinition,
         string discoveryTopic,
@@ -34,7 +34,7 @@ public class CameraMqttEntityConfigurationBuilder :
         QualityOfServiceLevel? discoveryMessageQualityOfServiceLevel,
         bool? retainDiscoveryMessages,
         ICommandHandler<ICamera, ICameraEntityDefinition>[] commandHandlers)
-        => new CameraMqttEntityConfiguration(
+        => new(
             entity,
             entityDefinition,
             discoveryTopic,

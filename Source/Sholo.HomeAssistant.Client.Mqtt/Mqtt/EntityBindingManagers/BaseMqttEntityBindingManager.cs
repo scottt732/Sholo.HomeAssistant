@@ -13,6 +13,7 @@ using Sholo.HomeAssistant.Client.Mqtt.EntityConfigurations;
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
 using Sholo.HomeAssistant.Client.Mqtt.MessageBus;
 using Sholo.Mqtt;
+using Sholo.Mqtt.Middleware;
 
 namespace Sholo.HomeAssistant.Client.Mqtt.EntityBindingManagers;
 
@@ -24,6 +25,8 @@ public abstract class BaseMqttEntityBindingManager<TMqttEntityConfiguration, TEn
 {
     public IDomain Domain { get; }
     public IList<IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition>> EntityConfigurations => _entityConfigurations;
+    public IMqttMiddleware CreateMiddleware() => new EntityCommandMiddleware(this);
+
     public IEnumerable<IMqttEntityBinding> UntypedEntityConfigurations => EntityConfigurations.Cast<IMqttEntityBinding>().ToList();
 
     public event EventHandler RebuildRequired;
@@ -33,7 +36,7 @@ public abstract class BaseMqttEntityBindingManager<TMqttEntityConfiguration, TEn
         RebuildRequired?.Invoke(this, EventArgs.Empty);
     }
 
-    private Func<MqttRequestContext, IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition>, ICommandContext<TEntity, TEntityDefinition>> CommandContextFactory { get; }
+    private Func<IMqttRequestContext, IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition>, ICommandContext<TEntity, TEntityDefinition>> CommandContextFactory { get; }
 
     private readonly ObservableCollection<IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition>> _entityConfigurations = new();
 
@@ -44,7 +47,7 @@ public abstract class BaseMqttEntityBindingManager<TMqttEntityConfiguration, TEn
         IDomain domain,
         IEnumerable<TMqttEntityConfiguration> entityConfigurations,
         Func<TMqttEntityConfiguration, IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition>> entityBindingFactory,
-        Func<MqttRequestContext, IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition>, ICommandContext<TEntity, TEntityDefinition>> commandContextFactory)
+        Func<IMqttRequestContext, IMqttEntityBinding<TMqttEntityConfiguration, TEntity, TEntityDefinition>, ICommandContext<TEntity, TEntityDefinition>> commandContextFactory)
     {
         Domain = domain;
         CommandContextFactory = commandContextFactory;
@@ -77,7 +80,7 @@ public abstract class BaseMqttEntityBindingManager<TMqttEntityConfiguration, TEn
         foreach (var entityConfiguration in _entityConfigurations) { entityConfiguration.Delete(); }
     }
 
-    public IEnumerable<Func<MqttRequestContext, Task<bool>>> GetTopicMessageHandlers()
+    public IEnumerable<Func<IMqttRequestContext, Task<bool>>> GetTopicMessageHandlers()
     {
         var topicCommandHandlers = EntityConfigurations
             .SelectMany(x => x.EntityConfiguration.CommandHandlers.Select(y => (configuration: x, commandHandler: y)))

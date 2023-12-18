@@ -22,7 +22,7 @@ public abstract class BaseResultMessage : BaseMessage
 
         if (HaveMessageType && !ValidMessageTypes.Contains(MessageType))
         {
-            yield return new ValidationResult($"The {nameof(MessageType)} '{MessageType}' is invalid. Expecting: {string.Join(", ", ValidMessageTypes)}");
+            yield return new ValidationResult($"The {nameof(MessageType)} '{MessageType}' is invalid. Expecting: {string.Join(", ", ValidMessageTypes.Select(x => x.ToString()))}");
         }
     }
 }

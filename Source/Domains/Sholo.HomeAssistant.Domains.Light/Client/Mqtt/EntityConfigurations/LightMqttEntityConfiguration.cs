@@ -1,4 +1,3 @@
-using Sholo.HomeAssistant.Client.Mqtt;
 using Sholo.HomeAssistant.Client.Mqtt.ApplicationMessage;
 using Sholo.HomeAssistant.Client.Mqtt.CommandHandlers;
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;

@@ -1,3 +1,4 @@
+using System;
 using Sholo.HomeAssistant.Client.Mqtt.EntityDefinitions;
 
 namespace Sholo.HomeAssistant.Client.Mqtt.EntityDefinitionBuilders;
@@ -7,6 +8,8 @@ public interface IStatefulEntityDefinitionBuilder<out TSelf, out TResult> : IEnt
     where TSelf : IStatefulEntityDefinitionBuilder<TSelf, TResult>
     where TResult : IStatefulEntityDefinition
 {
+    TSelf WithAvailability(Action<IAvailabilitiesBuilder> config);
+    TSelf WithAvailabilityMode(AvailabilityMode? availabilityMode);
     TSelf WithAvailabilityPayloads(string payloadAvailable = "online", string payloadNotAvailable = "offline");
     TSelf WithAvailabilityTopic(string availabilityTopic);
     TSelf WithJsonAttributes(string jsonAttributesTopic, string jsonAttributesTemplate);

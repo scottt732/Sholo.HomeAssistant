@@ -7,6 +7,6 @@ public class UnsubscribeCommand : BaseSubscriptionMessage
     public UnsubscribeCommand(long subscription)
     {
         Subscription = subscription;
-        MessageType = HomeAssistantWsMessageType.UnsubscribeEvents;
+        MessageType = HomeAssistantWsMessageTypes.UnsubscribeEvents;
     }
 }

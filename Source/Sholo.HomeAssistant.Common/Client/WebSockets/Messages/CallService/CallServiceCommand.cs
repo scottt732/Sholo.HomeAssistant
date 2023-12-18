@@ -13,7 +13,7 @@ public class CallServiceCommand : BaseCommand
 
     public CallServiceCommand(string domain, string service)
     {
-        MessageType = HomeAssistantWsMessageType.CallService;
+        MessageType = HomeAssistantWsMessageTypes.CallService;
         Domain = domain;
         Service = service;
     }

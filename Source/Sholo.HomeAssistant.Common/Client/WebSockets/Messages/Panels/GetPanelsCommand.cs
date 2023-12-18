@@ -4,6 +4,6 @@ public class GetPanelsCommand : BaseCommand
 {
     public GetPanelsCommand()
     {
-        MessageType = HomeAssistantWsMessageType.GetPanels;
+        MessageType = HomeAssistantWsMessageTypes.GetPanels;
     }
 }

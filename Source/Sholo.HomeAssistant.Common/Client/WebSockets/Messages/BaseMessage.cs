@@ -6,14 +6,16 @@ namespace Sholo.HomeAssistant.Client.WebSockets.Messages;
 
 public abstract class BaseMessage : IValidatableObject
 {
+    [JsonIgnore]
     protected bool HaveMessageType { get; private set; }
 
-    private HomeAssistantWsMessageType _messageType;
+    private HomeAssistantWsMessageType? _messageType;
 
     [JsonProperty(PropertyName = "type")]
+    [JsonConverter(typeof(HomeAssistantWsMessageTypeConverter))]
     public HomeAssistantWsMessageType MessageType
     {
-        get => _messageType;
+        get => _messageType ?? string.Empty;
         set
         {
             _messageType = value;
